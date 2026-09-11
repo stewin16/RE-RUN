@@ -1,0 +1,34 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://Scripts/Objects/traffic_barrier.gd" id="1_pipescript"]
+[ext_resource type="Texture2D" path="res://Assets/Items/overhead_pipe.png" id="2_pipetex"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pipe_top"]
+size = Vector2(56, 14)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nearmiss_pipe"]
+size = Vector2(60, 24)
+
+[node name="OverheadPipe" type="Area2D"]
+collision_layer = 4
+collision_mask = 2
+script = ExtResource("1_pipescript")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0, -24)
+texture = ExtResource("2_pipetex")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -32)
+shape = SubResource("RectangleShape2D_pipe_top")
+
+[node name="NearMissArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NearMissArea"]
+position = Vector2(0, -14)
+shape = SubResource("RectangleShape2D_nearmiss_pipe")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

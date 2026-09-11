@@ -1,0 +1,103 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://Scripts/Levels/level_1.gd" id="1_lvl"]
+[ext_resource type="PackedScene" path="res://Scenes/Player/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" path="res://Scenes/UI/hud.tscn" id="3_hud"]
+[ext_resource type="Texture2D" path="res://Assets/Backgrounds/city_sky.png" id="4_sky"]
+[ext_resource type="Texture2D" path="res://Assets/Backgrounds/city_distant.png" id="5_distant"]
+[ext_resource type="Texture2D" path="res://Assets/Backgrounds/city_near.png" id="6_near"]
+[ext_resource type="AudioStream" path="res://Assets/Audio/bgm.wav" id="7_bgm"]
+[ext_resource type="AudioStream" path="res://Assets/Audio/speedup.wav" id="8_speedup"]
+[ext_resource type="Texture2D" path="res://Assets/Backgrounds/sun.png" id="9_sun"]
+[ext_resource type="Texture2D" path="res://Assets/Backgrounds/moon.png" id="10_moon"]
+[ext_resource type="Texture2D" path="res://Assets/Backgrounds/pixel_stars.png" id="11_stars"]
+[ext_resource type="Texture2D" path="res://Assets/Backgrounds/pixel_clouds.png" id="12_clouds"]
+
+[node name="Level1" type="Node2D"]
+script = ExtResource("1_lvl")
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="SkyLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.02, 0.02)
+motion_mirroring = Vector2(480, 0)
+
+[node name="Sprite" type="TextureRect" parent="ParallaxBackground/SkyLayer"]
+texture_filter = 1
+offset_right = 480.0
+offset_bottom = 270.0
+texture = ExtResource("4_sky")
+
+[node name="StarsLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.04, 0.04)
+motion_mirroring = Vector2(480, 0)
+
+[node name="Sprite" type="TextureRect" parent="ParallaxBackground/StarsLayer"]
+texture_filter = 1
+offset_right = 480.0
+offset_bottom = 270.0
+texture = ExtResource("11_stars")
+
+[node name="CelestialLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.02, 0.02)
+
+[node name="SunSprite" type="Sprite2D" parent="ParallaxBackground/CelestialLayer"]
+texture_filter = 1
+position = Vector2(240, 60)
+texture = ExtResource("9_sun")
+
+[node name="MoonSprite" type="Sprite2D" parent="ParallaxBackground/CelestialLayer"]
+texture_filter = 1
+position = Vector2(240, 200)
+texture = ExtResource("10_moon")
+
+[node name="CloudsLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.12, 0.12)
+motion_mirroring = Vector2(960, 0)
+
+[node name="Sprite" type="TextureRect" parent="ParallaxBackground/CloudsLayer"]
+texture_filter = 1
+offset_top = 10.0
+offset_right = 960.0
+offset_bottom = 190.0
+texture = ExtResource("12_clouds")
+
+[node name="DistantLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.28, 0.28)
+motion_mirroring = Vector2(480, 0)
+
+[node name="Sprite" type="TextureRect" parent="ParallaxBackground/DistantLayer"]
+texture_filter = 1
+offset_right = 480.0
+offset_bottom = 270.0
+texture = ExtResource("5_distant")
+
+[node name="NearLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.55, 0.55)
+motion_mirroring = Vector2(480, 0)
+
+[node name="Sprite" type="TextureRect" parent="ParallaxBackground/NearLayer"]
+texture_filter = 1
+offset_right = 480.0
+offset_bottom = 270.0
+texture = ExtResource("6_near")
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+position = Vector2(80, 180)
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+position_smoothing_enabled = true
+position_smoothing_speed = 9.0
+limit_left = 0
+limit_top = -60
+limit_bottom = 270
+
+[node name="HUD" parent="." instance=ExtResource("3_hud")]
+
+[node name="BGM" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_bgm")
+volume_db = -6.0
+
+[node name="SpeedupSFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_speedup")
+volume_db = -4.0

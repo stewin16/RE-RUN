@@ -1,0 +1,22 @@
+# Binaries and dependencies
+godot_bin/
+node_modules/
+three.module.js
+
+# Unity / Temporary leftovers
+Library/
+Temp/
+ProjectSettings/
+Assets/
+*.csproj
+*.sln
+*.userprefs
+*.py
+game3d.js
+index.html
+claudedesignskills/
+package.json
+package-lock.json
+
+# Godot editor temp
+RE-RUN/RE-RUN/.godot/

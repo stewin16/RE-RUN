@@ -1,0 +1,38 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://Scripts/Objects/tech_terminal.gd" id="1_term"]
+[ext_resource type="Texture2D" path="res://Assets/Items/tech_terminal.png" id="2_img"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_term"]
+size = Vector2(24, 28)
+
+[sub_resource type="Gradient" id="Gradient_term"]
+colors = PackedColorArray(0.2, 0.9, 1, 1, 0, 0.6, 1, 0)
+
+[node name="TechTerminal" type="Area2D"]
+collision_layer = 4
+collision_mask = 1
+script = ExtResource("1_term")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_img")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_term")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+position = Vector2(0, -10)
+amount = 6
+lifetime = 0.8
+emission_shape = 3
+emission_rect_extents = Vector2(10, 4)
+direction = Vector2(0, -1)
+spread = 20.0
+gravity = Vector2(0, -25)
+initial_velocity_min = 15.0
+initial_velocity_max = 25.0
+scale_amount_min = 1.5
+scale_amount_max = 2.5
+color = Color(0.2, 0.85, 1, 0.9)
+color_ramp = SubResource("Gradient_term")

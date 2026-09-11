@@ -1,0 +1,45 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://Scripts/Objects/teacher_boss.gd" id="1_tbgd"]
+[ext_resource type="Texture2D" path="res://Assets/Characters/teacher_boss.png" id="2_tbtex"]
+[ext_resource type="AudioStream" path="res://Assets/Audio/exam_attack.wav" id="3_atksfx"]
+[ext_resource type="AudioStream" path="res://Assets/Audio/enemy_hit.wav" id="4_hurtsfx"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_boss"]
+radius = 14.0
+height = 42.0
+
+[node name="TeacherBoss" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 1
+script = ExtResource("1_tbgd")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_tbtex")
+region_enabled = true
+region_rect = Rect2(0, 0, 48, 48)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_boss")
+
+[node name="AttackSFX" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_atksfx")
+
+[node name="HurtSFX" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_hurtsfx")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+position = Vector2(0, 15)
+amount = 8
+lifetime = 1.0
+emission_shape = 3
+emission_rect_extents = Vector2(16, 4)
+direction = Vector2(0, -1)
+spread = 20.0
+gravity = Vector2(0, -20)
+initial_velocity_min = 10.0
+initial_velocity_max = 20.0
+scale_amount_min = 1.5
+scale_amount_max = 2.5
+color = Color(0.9, 0.2, 0.2, 0.8)

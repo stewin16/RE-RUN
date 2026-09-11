@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Tiles/1_Industrial_Tileset_1.png" id="1_tex"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gb"]
+size = Vector2(192, 48)
+
+[node name="GroundBlock" type="StaticBody2D"]
+collision_mask = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("1_tex")
+region_enabled = true
+region_rect = Rect2(0, 0, 192, 48)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_gb")

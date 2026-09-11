@@ -1,0 +1,550 @@
+[gd_scene load_steps=15 format=3]
+
+[ext_resource type="Script" path="res://Scripts/UI/main_menu.gd" id="1_mmgd"]
+[ext_resource type="Texture2D" path="res://Assets/Backgrounds/city_sky.png" id="2_sky"]
+[ext_resource type="Texture2D" path="res://Assets/Backgrounds/city_distant.png" id="3_distant"]
+[ext_resource type="Texture2D" path="res://Assets/Backgrounds/city_near.png" id="4_near"]
+[ext_resource type="Texture2D" path="res://Assets/Player/student_runner.png" id="5_runner"]
+[ext_resource type="AudioStream" path="res://Assets/Audio/click.wav" id="6_clicksfx"]
+[ext_resource type="AudioStream" path="res://Assets/Audio/bgm.wav" id="7_bgm"]
+[ext_resource type="Texture2D" path="res://Assets/Backgrounds/pixel_stars.png" id="8_stars"]
+[ext_resource type="Texture2D" path="res://Assets/Backgrounds/pixel_clouds.png" id="9_clouds"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r0"]
+atlas = ExtResource("5_runner")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r1"]
+atlas = ExtResource("5_runner")
+region = Rect2(32, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r2"]
+atlas = ExtResource("5_runner")
+region = Rect2(64, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r3"]
+atlas = ExtResource("5_runner")
+region = Rect2(96, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r4"]
+atlas = ExtResource("5_runner")
+region = Rect2(128, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r5"]
+atlas = ExtResource("5_runner")
+region = Rect2(160, 32, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_preview"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r5")
+}],
+"loop": true,
+"name": &"run",
+"speed": 10.0
+}]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_modal"]
+bg_color = Color(0.0941176, 0.0784314, 0.145098, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.960784, 0.619608, 0.0431373, 1)
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_mmgd")
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="SkyLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_mirroring = Vector2(480, 0)
+
+[node name="Sprite" type="TextureRect" parent="ParallaxBackground/SkyLayer"]
+texture_filter = 1
+offset_right = 480.0
+offset_bottom = 270.0
+texture = ExtResource("2_sky")
+
+[node name="StarsLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_mirroring = Vector2(480, 0)
+
+[node name="Sprite" type="TextureRect" parent="ParallaxBackground/StarsLayer"]
+texture_filter = 1
+offset_right = 480.0
+offset_bottom = 270.0
+texture = ExtResource("8_stars")
+
+[node name="CloudsLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_mirroring = Vector2(960, 0)
+
+[node name="Sprite" type="TextureRect" parent="ParallaxBackground/CloudsLayer"]
+texture_filter = 1
+offset_top = 10.0
+offset_right = 960.0
+offset_bottom = 190.0
+texture = ExtResource("9_clouds")
+
+[node name="DistantLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_mirroring = Vector2(480, 0)
+
+[node name="Sprite" type="TextureRect" parent="ParallaxBackground/DistantLayer"]
+texture_filter = 1
+offset_right = 480.0
+offset_bottom = 270.0
+texture = ExtResource("3_distant")
+
+[node name="NearLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_mirroring = Vector2(480, 0)
+
+[node name="Sprite" type="TextureRect" parent="ParallaxBackground/NearLayer"]
+texture_filter = 1
+offset_right = 480.0
+offset_bottom = 270.0
+texture = ExtResource("4_near")
+
+[node name="DarkOverlay" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.06, 0.08, 0.14, 0.4)
+
+[node name="ForegroundRunner" type="Node2D" parent="."]
+position = Vector2(240, 225)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="ForegroundRunner"]
+texture_filter = 1
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_preview")
+animation = &"run"
+autoplay = "run"
+
+[node name="MenuContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="MenuContainer"]
+layout_mode = 2
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="Title" type="Label" parent="MenuContainer/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.960784, 0.619608, 0.0431373, 1)
+theme_override_colors/font_outline_color = Color(0.0941176, 0.0784314, 0.145098, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 36
+text = "RE-RUN"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="MenuContainer/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.92, 0.98, 1)
+theme_override_colors/font_outline_color = Color(0.0941176, 0.0784314, 0.145098, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 11
+text = "RUN. REACT. REPEAT."
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="MenuContainer/VBox"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="Buttons" type="VBoxContainer" parent="MenuContainer/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="StartBtn" type="Button" parent="MenuContainer/VBox/Buttons"]
+custom_minimum_size = Vector2(140, 24)
+layout_mode = 2
+pivot_offset = Vector2(70, 12)
+focus_mode = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(0.98, 0.85, 0.2, 1)
+theme_override_font_sizes/font_size = 12
+text = "START RUN"
+
+[node name="CharBtn" type="Button" parent="MenuContainer/VBox/Buttons"]
+custom_minimum_size = Vector2(140, 24)
+layout_mode = 2
+focus_mode = 0
+theme_override_colors/font_color = Color(0.3, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 11
+text = "RUNNER: KAEL"
+
+[node name="HowToBtn" type="Button" parent="MenuContainer/VBox/Buttons"]
+custom_minimum_size = Vector2(140, 24)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 11
+text = "HOW TO PLAY"
+
+[node name="SettingsBtn" type="Button" parent="MenuContainer/VBox/Buttons"]
+custom_minimum_size = Vector2(130, 24)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 12
+text = "SETTINGS"
+
+[node name="QuitBtn" type="Button" parent="MenuContainer/VBox/Buttons"]
+custom_minimum_size = Vector2(130, 24)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 12
+text = "QUIT"
+
+[node name="HowToPanel" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -140.0
+offset_top = -95.0
+offset_right = 140.0
+offset_bottom = 95.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_modal")
+
+[node name="VBox" type="VBoxContainer" parent="HowToPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 14.0
+offset_top = 10.0
+offset_right = -14.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 5
+alignment = 1
+
+[node name="Title" type="Label" parent="HowToPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.960784, 0.619608, 0.0431373, 1)
+theme_override_font_sizes/font_size = 14
+text = "HOW TO PLAY"
+horizontal_alignment = 1
+
+[node name="Instr" type="Label" parent="HowToPanel/VBox"]
+layout_mode = 2
+text = "A / D or LEFT / RIGHT : MOVE & RUN
+SPACE / W / UP : JUMP (DOUBLE JUMP IN AIR)
+S / DOWN : SLIDE UNDER PIPES & BARRIERS
+J / F / Z / L-CLICK : ENERGY SLASH / ACTION
+
+● COLLECT COINS FOR HIGH SCORE
+⚠ AVOID SPIKES & PIPES | GAIN SPEED
+★ NEAR MISSES GRANT +50 BONUS POINTS"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="CloseBtn" type="Button" parent="HowToPanel/VBox"]
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 11
+text = "BACK"
+
+[node name="SettingsPanel" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -110.0
+offset_top = -80.0
+offset_right = 110.0
+offset_bottom = 80.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_modal")
+
+[node name="VBox" type="VBoxContainer" parent="SettingsPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 10.0
+offset_right = -16.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="Title" type="Label" parent="SettingsPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.960784, 0.619608, 0.0431373, 1)
+theme_override_font_sizes/font_size = 14
+text = "SETTINGS"
+horizontal_alignment = 1
+
+[node name="MusicRow" type="HBoxContainer" parent="SettingsPanel/VBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="SettingsPanel/VBox/MusicRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+text = "MUSIC"
+
+[node name="MusicToggle" type="CheckButton" parent="SettingsPanel/VBox/MusicRow"]
+layout_mode = 2
+focus_mode = 0
+button_pressed = true
+
+[node name="SFXRow" type="HBoxContainer" parent="SettingsPanel/VBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="SettingsPanel/VBox/SFXRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+text = "SFX"
+
+[node name="SFXToggle" type="CheckButton" parent="SettingsPanel/VBox/SFXRow"]
+layout_mode = 2
+focus_mode = 0
+button_pressed = true
+
+[node name="FSRow" type="HBoxContainer" parent="SettingsPanel/VBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="SettingsPanel/VBox/FSRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+text = "FULLSCREEN"
+
+[node name="FSToggle" type="CheckButton" parent="SettingsPanel/VBox/FSRow"]
+layout_mode = 2
+focus_mode = 0
+
+[node name="CloseSettingsBtn" type="Button" parent="SettingsPanel/VBox"]
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 11
+text = "BACK"
+
+[node name="CharPanel" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -190.0
+offset_top = -115.0
+offset_right = 190.0
+offset_bottom = 115.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_modal")
+
+[node name="VBox" type="VBoxContainer" parent="CharPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 8.0
+offset_right = -12.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="Title" type="Label" parent="CharPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.62, 0.04, 1)
+theme_override_font_sizes/font_size = 9
+text = "🎓 CHOOSE YOUR RUNNER (COLLEGE ROSTER) 🎓"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="CarouselHBox" type="HBoxContainer" parent="CharPanel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="PrevCharBtn" type="Button" parent="CharPanel/VBox/CarouselHBox"]
+custom_minimum_size = Vector2(28, 64)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 14
+text = "◀"
+
+[node name="ProfileCard" type="PanelContainer" parent="CharPanel/VBox/CarouselHBox"]
+custom_minimum_size = Vector2(280, 72)
+layout_mode = 2
+
+[node name="CardContent" type="HBoxContainer" parent="CharPanel/VBox/CarouselHBox/ProfileCard"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="FaceRect" type="TextureRect" parent="CharPanel/VBox/CarouselHBox/ProfileCard/CardContent"]
+texture_filter = 1
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+size_flags_vertical = 4
+expand_mode = 1
+stretch_mode = 5
+
+[node name="InfoVBox" type="VBoxContainer" parent="CharPanel/VBox/CarouselHBox/ProfileCard/CardContent"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+alignment = 1
+
+[node name="NameLabel" type="Label" parent="CharPanel/VBox/CarouselHBox/ProfileCard/CardContent/InfoVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_font_sizes/font_size = 11
+text = "LEO TANAKA"
+
+[node name="MajorLabel" type="Label" parent="CharPanel/VBox/CarouselHBox/ProfileCard/CardContent/InfoVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 9
+text = "Computer Science (Core Algorithms)"
+autowrap_mode = 2
+
+[node name="DescLabel" type="Label" parent="CharPanel/VBox/CarouselHBox/ProfileCard/CardContent/InfoVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 8
+text = "Sprint Specialist — Navy Gakuran & Gold Buttons"
+autowrap_mode = 2
+
+[node name="StatusLabel" type="Label" parent="CharPanel/VBox/CarouselHBox/ProfileCard/CardContent/InfoVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.25, 0.95, 0.45, 1)
+theme_override_font_sizes/font_size = 8
+text = "★ ACTIVE RUNNER ★"
+
+[node name="NextCharBtn" type="Button" parent="CharPanel/VBox/CarouselHBox"]
+custom_minimum_size = Vector2(28, 64)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 14
+text = "▶"
+
+[node name="QuickSelectHBox" type="HBoxContainer" parent="CharPanel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="PrevBtn" type="Button" parent="CharPanel/VBox/QuickSelectHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_font_sizes/font_size = 9
+text = "◀ PREV"
+
+[node name="MaleGroupBtn" type="Button" parent="CharPanel/VBox/QuickSelectHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_font_sizes/font_size = 9
+text = "MALE (11)"
+
+[node name="FemaleGroupBtn" type="Button" parent="CharPanel/VBox/QuickSelectHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_font_sizes/font_size = 9
+text = "FEMALE (11)"
+
+[node name="NextBtn" type="Button" parent="CharPanel/VBox/QuickSelectHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_font_sizes/font_size = 9
+text = "NEXT ▶"
+
+[node name="BottomHBox" type="HBoxContainer" parent="CharPanel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="StartRunBtn" type="Button" parent="CharPanel/VBox/BottomHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_font_sizes/font_size = 10
+text = "START RUN AS RUNNER"
+clip_text = true
+
+[node name="CloseCharBtn" type="Button" parent="CharPanel/VBox/BottomHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_font_sizes/font_size = 10
+text = "BACK TO MENU"
+
+[node name="ClickSFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_clicksfx")
+
+[node name="BGM" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_bgm")
+volume_db = -6.0
+autoplay = true
+
+[connection signal="pressed" from="MenuContainer/VBox/Buttons/StartBtn" to="." method="_on_start_btn_pressed"]
+[connection signal="pressed" from="MenuContainer/VBox/Buttons/CharBtn" to="." method="_on_char_btn_pressed"]
+[connection signal="pressed" from="MenuContainer/VBox/Buttons/HowToBtn" to="." method="_on_howto_btn_pressed"]
+[connection signal="pressed" from="MenuContainer/VBox/Buttons/SettingsBtn" to="." method="_on_settings_btn_pressed"]
+[connection signal="pressed" from="MenuContainer/VBox/Buttons/QuitBtn" to="." method="_on_quit_btn_pressed"]
+[connection signal="pressed" from="HowToPanel/VBox/CloseBtn" to="." method="_on_close_howto_pressed"]
+[connection signal="pressed" from="CharPanel/VBox/CarouselHBox/PrevCharBtn" to="." method="_on_prev_char_pressed"]
+[connection signal="pressed" from="CharPanel/VBox/CarouselHBox/NextCharBtn" to="." method="_on_next_char_pressed"]
+[connection signal="pressed" from="CharPanel/VBox/QuickSelectHBox/PrevBtn" to="." method="_on_prev_char_pressed"]
+[connection signal="pressed" from="CharPanel/VBox/QuickSelectHBox/MaleGroupBtn" to="." method="_on_select_char_key" binds= ["student_m_a"]]
+[connection signal="pressed" from="CharPanel/VBox/QuickSelectHBox/FemaleGroupBtn" to="." method="_on_select_char_key" binds= ["student_f_a"]]
+[connection signal="pressed" from="CharPanel/VBox/QuickSelectHBox/NextBtn" to="." method="_on_next_char_pressed"]
+[connection signal="pressed" from="CharPanel/VBox/BottomHBox/StartRunBtn" to="." method="_on_start_btn_pressed"]
+[connection signal="pressed" from="CharPanel/VBox/BottomHBox/CloseCharBtn" to="." method="_on_close_char_pressed"]
+[connection signal="toggled" from="SettingsPanel/VBox/MusicRow/MusicToggle" to="." method="_on_music_toggled"]
+[connection signal="toggled" from="SettingsPanel/VBox/SFXRow/SFXToggle" to="." method="_on_sfx_toggled"]
+[connection signal="toggled" from="SettingsPanel/VBox/FSRow/FSToggle" to="." method="_on_fs_toggled"]
+[connection signal="pressed" from="SettingsPanel/VBox/CloseSettingsBtn" to="." method="_on_close_settings_pressed"]

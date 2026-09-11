@@ -1,0 +1,53 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://Scripts/Objects/question_block.gd" id="1_qbgd"]
+[ext_resource type="Texture2D" path="res://Assets/Items/question_block.png" id="2_qbtex"]
+[ext_resource type="AudioStream" path="res://Assets/Audio/block_hit.wav" id="3_hitsfx"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_solid"]
+size = Vector2(16, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_trigger"]
+size = Vector2(18, 20)
+
+[sub_resource type="Gradient" id="Gradient_sparks"]
+colors = PackedColorArray(1, 0.9, 0.2, 1, 1, 0.5, 0, 0)
+
+[node name="QuestionBlock" type="StaticBody2D"]
+collision_layer = 1
+collision_mask = 1
+script = ExtResource("1_qbgd")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_qbtex")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_solid")
+
+[node name="HitArea" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitArea"]
+shape = SubResource("RectangleShape2D_trigger")
+
+[node name="HitSFX" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_hitsfx")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+emitting = false
+amount = 12
+lifetime = 0.5
+one_shot = true
+explosiveness = 0.9
+direction = Vector2(0, -1)
+spread = 60.0
+gravity = Vector2(0, 180)
+initial_velocity_min = 40.0
+initial_velocity_max = 75.0
+scale_amount_min = 1.5
+scale_amount_max = 2.5
+color_ramp = SubResource("Gradient_sparks")
