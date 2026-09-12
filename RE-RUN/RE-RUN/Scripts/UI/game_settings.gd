@@ -1,20 +1,19 @@
-class_name GameSettings
-extends RefCounted
+extends Node
 
-static var selected_character: String = "student_m_a"
-static var current_level: int = 1 # Level 1 to 5
+var selected_character: String = "student_m_a"
+var current_level: int = 1 # Level 1 to 5
 
 # Active Power-up states
-static var is_multiplier_active: bool = false
-static var is_magnet_active: bool = false
-static var has_shield: bool = false
-static var power_up_timer: float = 0.0
+var is_multiplier_active: bool = false
+var is_magnet_active: bool = false
+var has_shield: bool = false
+var power_up_timer: float = 0.0
 
 # Educational & Quiz mechanics
-static var lifelines: int = 3 # 3 Lifelines: ♥ ♥ ♥
-static var hints: int = 0 # 💡 Max 1 per level
-static var knowledge_score: int = 0 # 🧠 Knowledge points
-static var learned_memory_shards: Array[Dictionary] = []
+var lifelines: int = 3 # 3 Lifelines: ♥ ♥ ♥
+var hints: int = 0 # 💡 Max 1 per level
+var knowledge_score: int = 0 # 🧠 Knowledge points
+var learned_memory_shards: Array[Dictionary] = []
 
 const STUDENT_KEYS = [
 	"student_m_a", "student_m_b", "student_m_c", "student_m_d", "student_m_e", "student_m_f", "student_m_g", "student_m_h", "student_m_i", "student_m_j", "student_m_k",
@@ -389,7 +388,7 @@ const LEVEL_TEACHERS = {
 	}
 }
 
-static func reset_run_state() -> void:
+func reset_run_state() -> void:
 	is_multiplier_active = false
 	is_magnet_active = false
 	has_shield = false
@@ -399,13 +398,13 @@ static func reset_run_state() -> void:
 	knowledge_score = 0
 	learned_memory_shards.clear()
 
-static func activate_tech_power_up(duration: float = 10.0) -> void:
+func activate_tech_power_up(duration: float = 10.0) -> void:
 	is_multiplier_active = true
 	is_magnet_active = true
 	has_shield = true
 	power_up_timer = duration
 
-static func get_current_character() -> Dictionary:
+func get_current_character() -> Dictionary:
 	var key: String = selected_character
 	if CHARACTERS.has(key) and CHARACTERS[key].has("alias"):
 		key = CHARACTERS[key]["alias"]
@@ -414,7 +413,7 @@ static func get_current_character() -> Dictionary:
 	return CHARACTERS["student_m_a"]
 
 
-static func get_current_teacher() -> Dictionary:
+func get_current_teacher() -> Dictionary:
 	var lvl: int = clampi(current_level, 1, 5)
 	if LEVEL_TEACHERS.has(lvl):
 		return LEVEL_TEACHERS[lvl]
