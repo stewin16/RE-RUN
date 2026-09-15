@@ -3,6 +3,10 @@ extends Node
 var selected_character: String = "student_m_a"
 var current_level: int = 1 # Level 1 to 5
 
+# Persistent player wallet coins across all runs, levels, and retries
+var wallet_coins: int = 0
+const SAVE_PATH = "user://rerun_save.cfg"
+
 # Active Power-up states
 var is_multiplier_active: bool = false
 var is_magnet_active: bool = false
@@ -14,6 +18,28 @@ var lifelines: int = 3 # 3 Lifelines: ♥ ♥ ♥
 var hints: int = 0 # 💡 Max 1 per level
 var knowledge_score: int = 0 # 🧠 Knowledge points
 var learned_memory_shards: Array[Dictionary] = []
+
+func _ready() -> void:
+	load_wallet()
+	var env_lvl := OS.get_environment("COLLEGE_RUN_LEVEL")
+	if env_lvl != "":
+		current_level = clampi(int(env_lvl), 1, 10)
+
+	var user_args := OS.get_cmdline_user_args()
+	for i in range(user_args.size()):
+		if user_args[i] == "--level" and i + 1 < user_args.size():
+			current_level = clampi(int(user_args[i + 1]), 1, 10)
+
+func save_wallet() -> void:
+	var cfg := ConfigFile.new()
+	cfg.load(SAVE_PATH)
+	cfg.set_value("player", "wallet_coins", wallet_coins)
+	cfg.save(SAVE_PATH)
+
+func load_wallet() -> void:
+	var cfg := ConfigFile.new()
+	if cfg.load(SAVE_PATH) == OK:
+		wallet_coins = cfg.get_value("player", "wallet_coins", 0)
 
 const STUDENT_KEYS = [
 	"student_m_a", "student_m_b", "student_m_c", "student_m_d", "student_m_e", "student_m_f", "student_m_g", "student_m_h", "student_m_i", "student_m_j", "student_m_k",
@@ -28,7 +54,10 @@ const CHARACTERS = {
 		"major": "Computer Science (Algorithms)",
 		"face": "res://Assets/KW_School_Characters/64X64 Face/Student_M_A.png",
 		"sprite": "res://Assets/Player/runner_student_m_a.png",
-		"desc": "Sprint Specialist — Navy Gakuran & Gold Buttons"
+		"desc": "Sprint Specialist — Navy Gakuran & Gold Buttons",
+		"skill_name": "Optimized Velocity",
+		"skill_desc": "+10% Base Sprint Speed & Faster Acceleration",
+		"skill_icon": "res://Assets/AbilityIcons/Ability Icons/Icons (All)/Yellow1.png"
 	},
 	"student_m_b": {
 		"id": "student_m_b",
@@ -36,7 +65,10 @@ const CHARACTERS = {
 		"major": "Cybersecurity (Systems Defense)",
 		"face": "res://Assets/KW_School_Characters/64X64 Face/Student_M_B.png",
 		"sprite": "res://Assets/Player/runner_student_m_b.png",
-		"desc": "Security Hacker — Charcoal Stealth Blazer"
+		"desc": "Security Hacker — Charcoal Stealth Blazer",
+		"skill_name": "Firewall Shield",
+		"skill_desc": "Starts level with an active Shield absorbing 1 hit",
+		"skill_icon": "res://Assets/AbilityIcons/Ability Icons/Icons (All)/Blue3.png"
 	},
 	"student_m_c": {
 		"id": "student_m_c",
@@ -44,7 +76,10 @@ const CHARACTERS = {
 		"major": "Game Development (Physics & 3D)",
 		"face": "res://Assets/KW_School_Characters/64X64 Face/Student_M_C.png",
 		"sprite": "res://Assets/Player/runner_student_m_c.png",
-		"desc": "Engine Architect — Slate Grey Blazer & Emerald Tie"
+		"desc": "Engine Architect — Slate Grey Blazer & Emerald Tie",
+		"skill_name": "Low-Gravity Engine",
+		"skill_desc": "+20% Jump Height & Floaty Aerial Control",
+		"skill_icon": "res://Assets/AbilityIcons/Ability Icons/Icons (All)/Green4.png"
 	},
 	"student_m_d": {
 		"id": "student_m_d",
@@ -52,7 +87,10 @@ const CHARACTERS = {
 		"major": "Cloud Systems & DevOps",
 		"face": "res://Assets/KW_School_Characters/64X64 Face/Student_M_D.png",
 		"sprite": "res://Assets/Player/runner_student_m_d.png",
-		"desc": "DevOps Architect — Cobalt Blue Blazer & Striped Tie"
+		"desc": "DevOps Architect — Cobalt Blue Blazer & Striped Tie",
+		"skill_name": "Auto-Scaling Infrastructure",
+		"skill_desc": "Auto-triggers emergency Shield when dropped to 1 HP",
+		"skill_icon": "res://Assets/AbilityIcons/Ability Icons/Icons (All)/Blue8.png"
 	},
 	"student_m_e": {
 		"id": "student_m_e",
@@ -60,7 +98,10 @@ const CHARACTERS = {
 		"major": "Robotics & Microcontrollers",
 		"face": "res://Assets/KW_School_Characters/64X64 Face/Student_M_E.png",
 		"sprite": "res://Assets/Player/runner_student_m_e.png",
-		"desc": "Hardware Specialist — Charcoal Vest & Crimson Tie"
+		"desc": "Hardware Specialist — Charcoal Vest & Crimson Tie",
+		"skill_name": "Overclocked Actuators",
+		"skill_desc": "Magnet Power-Ups last 15s instead of 10s",
+		"skill_icon": "res://Assets/AbilityIcons/Ability Icons/Icons (All)/Red5.png"
 	},
 	"student_m_f": {
 		"id": "student_m_f",
@@ -68,7 +109,10 @@ const CHARACTERS = {
 		"major": "Computer Graphics & Shaders",
 		"face": "res://Assets/KW_School_Characters/64X64 Face/Student_M_F.png",
 		"sprite": "res://Assets/Player/runner_student_m_f.png",
-		"desc": "Rendering Pro — Dark Navy Cardigan & White Shirt"
+		"desc": "Rendering Pro — Dark Navy Cardigan & White Shirt",
+		"skill_name": "Bloom Radiance",
+		"skill_desc": "2x Score Multipliers last +50% longer",
+		"skill_icon": "res://Assets/AbilityIcons/Ability Icons/Icons (All)/Yellow7.png"
 	},
 	"student_m_g": {
 		"id": "student_m_g",
@@ -76,7 +120,10 @@ const CHARACTERS = {
 		"major": "Compilers & Systems (Rust/C++)",
 		"face": "res://Assets/KW_School_Characters/64X64 Face/Student_M_G.png",
 		"sprite": "res://Assets/Player/runner_student_m_g.png",
-		"desc": "Low-Level Coder — Midnight Black Jacket & Silver Pin"
+		"desc": "Low-Level Coder — Midnight Black Jacket & Silver Pin",
+		"skill_name": "Zero-Cost Abstraction",
+		"skill_desc": "Doubles all Near-Miss hurdle bonus scores (+100)",
+		"skill_icon": "res://Assets/AbilityIcons/Ability Icons/Icons (All)/Purple2.png"
 	},
 	"student_m_h": {
 		"id": "student_m_h",
@@ -84,7 +131,10 @@ const CHARACTERS = {
 		"major": "Distributed Computing",
 		"face": "res://Assets/KW_School_Characters/64X64 Face/Student_M_H.png",
 		"sprite": "res://Assets/Player/runner_student_m_h.png",
-		"desc": "Cluster Engineer — Forest Green Blazer & Gold Tie"
+		"desc": "Cluster Engineer — Forest Green Blazer & Gold Tie",
+		"skill_name": "Cluster Load Balancer",
+		"skill_desc": "+25% Bonus Score for every Coin Streak",
+		"skill_icon": "res://Assets/AbilityIcons/Ability Icons/Icons (All)/Green10.png"
 	},
 	"student_m_i": {
 		"id": "student_m_i",
@@ -92,7 +142,10 @@ const CHARACTERS = {
 		"major": "Bioinformatics & DNA Analysis",
 		"face": "res://Assets/KW_School_Characters/64X64 Face/Student_M_I.png",
 		"sprite": "res://Assets/Player/runner_student_m_i.png",
-		"desc": "Data Biologist — Sky Blue Blazer & Sapphire Ribbon"
+		"desc": "Data Biologist — Sky Blue Blazer & Sapphire Ribbon",
+		"skill_name": "Cellular Regeneration",
+		"skill_desc": "Recovers 1 lost Heart (lifeline) after clearing Level Exam",
+		"skill_icon": "res://Assets/AbilityIcons/Ability Icons/Icons (All)/Red1.png"
 	},
 	"student_m_j": {
 		"id": "student_m_j",
@@ -100,7 +153,10 @@ const CHARACTERS = {
 		"major": "Silicon Architecture (RISC-V)",
 		"face": "res://Assets/KW_School_Characters/64X64 Face/Student_M_J.png",
 		"sprite": "res://Assets/Player/runner_student_m_j.png",
-		"desc": "Silicon Designer — Steel Grey Vest & Azure Tie"
+		"desc": "Silicon Designer — Steel Grey Vest & Azure Tie",
+		"skill_name": "Direct Memory Access",
+		"skill_desc": "Earns +15 Knowledge Points per Question Block hit",
+		"skill_icon": "res://Assets/AbilityIcons/Ability Icons/Icons (All)/Blue12.png"
 	},
 	"student_m_k": {
 		"id": "student_m_k",
@@ -108,7 +164,10 @@ const CHARACTERS = {
 		"major": "Quantum Computing & Cryptography",
 		"face": "res://Assets/KW_School_Characters/64X64 Face/Student_M_K.png",
 		"sprite": "res://Assets/Player/runner_student_m_k.png",
-		"desc": "Quantum Theorist — Deep Purple Blazer & Platinum Clip"
+		"desc": "Quantum Theorist — Deep Purple Blazer & Platinum Clip",
+		"skill_name": "Quantum Superposition",
+		"skill_desc": "Quizzes allow 1 mistake without losing a heart",
+		"skill_icon": "res://Assets/AbilityIcons/Ability Icons/Icons (All)/Purple14.png"
 	},
 
 	# 11 Female Students
@@ -118,7 +177,10 @@ const CHARACTERS = {
 		"major": "Software Engineering (Protocols)",
 		"face": "res://Assets/KW_School_Characters/64X64 Face/Student_F_A.png",
 		"sprite": "res://Assets/Player/runner_student_f_a.png",
-		"desc": "Agile Coder — Navy Sailor Blazer & White Collar"
+		"desc": "Agile Coder — Navy Sailor Blazer & White Collar",
+		"skill_name": "Agile Sprint",
+		"skill_desc": "Slide duration extended +35% with speed bonus",
+		"skill_icon": "res://Assets/AbilityIcons/Ability Icons/Icons (All)/Yellow2.png"
 	},
 	"student_f_b": {
 		"id": "student_f_b",
@@ -126,7 +188,10 @@ const CHARACTERS = {
 		"major": "Data Science (Big Data Architecture)",
 		"face": "res://Assets/KW_School_Characters/64X64 Face/Student_F_B.png",
 		"sprite": "res://Assets/Player/runner_student_f_b.png",
-		"desc": "Data Analyst — Royal Navy & Crimson Ribbon"
+		"desc": "Data Analyst — Royal Navy & Crimson Ribbon",
+		"skill_name": "Data Mining",
+		"skill_desc": "+30% Bonus Coins collected from all trails",
+		"skill_icon": "res://Assets/AbilityIcons/Ability Icons/Icons (All)/Yellow10.png"
 	},
 	"student_f_c": {
 		"id": "student_f_c",
@@ -134,7 +199,10 @@ const CHARACTERS = {
 		"major": "Artificial Intelligence (Neural Nets)",
 		"face": "res://Assets/KW_School_Characters/64X64 Face/Student_F_C.png",
 		"sprite": "res://Assets/Player/runner_student_f_c.png",
-		"desc": "Robotics Researcher — Charcoal Vest & Rose Ribbon"
+		"desc": "Robotics Researcher — Charcoal Vest & Rose Ribbon",
+		"skill_name": "Predictive AI",
+		"skill_desc": "Quiz Hint removes 2 wrong options instead of 1",
+		"skill_icon": "res://Assets/AbilityIcons/Ability Icons/Icons (All)/Purple9.png"
 	},
 	"student_f_d": {
 		"id": "student_f_d",
@@ -142,7 +210,10 @@ const CHARACTERS = {
 		"major": "Network Security & Penetration Testing",
 		"face": "res://Assets/KW_School_Characters/64X64 Face/Student_F_D.png",
 		"sprite": "res://Assets/Player/runner_student_f_d.png",
-		"desc": "Ethical Hacker — Midnight Blue Sailor Suit & Teal Scarf"
+		"desc": "Ethical Hacker — Midnight Blue Sailor Suit & Teal Scarf",
+		"skill_name": "Exploit Bypass",
+		"skill_desc": "Smashes 1 Traffic Barrier per level harmlessly",
+		"skill_icon": "res://Assets/AbilityIcons/Ability Icons/Icons (All)/Red9.png"
 	},
 	"student_f_e": {
 		"id": "student_f_e",
@@ -150,7 +221,10 @@ const CHARACTERS = {
 		"major": "Human-Computer Interaction & UX",
 		"face": "res://Assets/KW_School_Characters/64X64 Face/Student_F_E.png",
 		"sprite": "res://Assets/Player/runner_student_f_e.png",
-		"desc": "Interface Designer — Powder Blue Blazer & Ribbon Bow"
+		"desc": "Interface Designer — Powder Blue Blazer & Ribbon Bow",
+		"skill_name": "Ergonomic Buffer",
+		"skill_desc": "Grants +5 extra seconds during Quiz questions",
+		"skill_icon": "res://Assets/AbilityIcons/Ability Icons/Icons (All)/White6.png"
 	},
 	"student_f_f": {
 		"id": "student_f_f",
@@ -158,7 +232,10 @@ const CHARACTERS = {
 		"major": "Cryptographic Engineering (ZK Proofs)",
 		"face": "res://Assets/KW_School_Characters/64X64 Face/Student_F_F.png",
 		"sprite": "res://Assets/Player/runner_student_f_f.png",
-		"desc": "Cryptographer — Raven Black Blazer & Violet Ribbon"
+		"desc": "Cryptographer — Raven Black Blazer & Violet Ribbon",
+		"skill_name": "Phantom Magnetism",
+		"skill_desc": "Passive coin magnet active at 2x pickup range",
+		"skill_icon": "res://Assets/AbilityIcons/Ability Icons/Icons (All)/Purple6.png"
 	},
 	"student_f_g": {
 		"id": "student_f_g",
@@ -166,7 +243,10 @@ const CHARACTERS = {
 		"major": "Computer Vision & NeRFs",
 		"face": "res://Assets/KW_School_Characters/64X64 Face/Student_F_G.png",
 		"sprite": "res://Assets/Player/runner_student_f_g.png",
-		"desc": "Vision Researcher — Emerald Green Sailor Uniform"
+		"desc": "Vision Researcher — Emerald Green Sailor Uniform",
+		"skill_name": "Thermal Vision HUD",
+		"skill_desc": "Highlights upcoming spikes & pipes with warning trails",
+		"skill_icon": "res://Assets/AbilityIcons/Ability Icons/Icons (All)/Green7.png"
 	},
 	"student_f_h": {
 		"id": "student_f_h",
@@ -174,7 +254,10 @@ const CHARACTERS = {
 		"major": "Database Storage Engines",
 		"face": "res://Assets/KW_School_Characters/64X64 Face/Student_F_H.png",
 		"sprite": "res://Assets/Player/runner_student_f_h.png",
-		"desc": "Storage Architect — Burgundy Blazer & Gold Hairpin"
+		"desc": "Storage Architect — Burgundy Blazer & Gold Hairpin",
+		"skill_name": "B-Tree Indexing",
+		"skill_desc": "Starts level with 2 free Hints (💡) instead of 1",
+		"skill_icon": "res://Assets/AbilityIcons/Ability Icons/Icons (All)/White11.png"
 	},
 	"student_f_i": {
 		"id": "student_f_i",
@@ -182,7 +265,10 @@ const CHARACTERS = {
 		"major": "Operating Systems & Kernels",
 		"face": "res://Assets/KW_School_Characters/64X64 Face/Student_F_I.png",
 		"sprite": "res://Assets/Player/runner_student_f_i.png",
-		"desc": "Kernel Hacker — Classic Navy Blazer & Pink Ribbon"
+		"desc": "Kernel Hacker — Classic Navy Blazer & Pink Ribbon",
+		"skill_name": "Interrupt Handler",
+		"skill_desc": "Invulnerability after damage increased to 3.0s",
+		"skill_icon": "res://Assets/AbilityIcons/Ability Icons/Icons (All)/Red12.png"
 	},
 	"student_f_j": {
 		"id": "student_f_j",
@@ -190,7 +276,10 @@ const CHARACTERS = {
 		"major": "Embedded Sensor Networks",
 		"face": "res://Assets/KW_School_Characters/64X64 Face/Student_F_J.png",
 		"sprite": "res://Assets/Player/runner_student_f_j.png",
-		"desc": "Firmware Engineer — Slate Grey Uniform & Yellow Scarf"
+		"desc": "Firmware Engineer — Slate Grey Uniform & Yellow Scarf",
+		"skill_name": "Proximity Sensor",
+		"skill_desc": "Near-miss detection range increased +50% (+75 pts)",
+		"skill_icon": "res://Assets/AbilityIcons/Ability Icons/Icons (All)/Yellow14.png"
 	},
 	"student_f_k": {
 		"id": "student_f_k",
@@ -198,26 +287,21 @@ const CHARACTERS = {
 		"major": "Autonomous Cybernetics",
 		"face": "res://Assets/KW_School_Characters/64X64 Face/Student_F_K.png",
 		"sprite": "res://Assets/Player/runner_student_f_k.png",
-		"desc": "Cybernetics Lead — Alpine Navy Blazer & Crimson Cravat"
-	},
-
-	# Backward-compatible short aliases
-	"leo": { "alias": "student_m_a" },
-	"maya": { "alias": "student_f_a" },
-	"kai": { "alias": "student_m_b" },
-	"chloe": { "alias": "student_f_b" },
-	"ren": { "alias": "student_m_c" },
-	"aoi": { "alias": "student_f_c" }
+		"desc": "Cybernetics Lead — Alpine Navy Blazer & Crimson Cravat",
+		"skill_name": "Nanite Hull Upgrade",
+		"skill_desc": "Starts level with 4 Hearts (♥ ♥ ♥ ♥)",
+		"skill_icon": "res://Assets/AbilityIcons/Ability Icons/Icons (All)/Red15.png"
+	}
 }
 
 const LEVEL_TEACHERS = {
 	1: {
 		"name": "Prof. Sterling",
-		"title": "Semester 1: Computer Systems & Core Data Structures",
-		"sprite": "res://Assets/Characters/teacher_lvl1.png",
+		"title": "Level 1: Computer Systems & Core Data Structures",
 		"face": "res://Assets/KW_School_Characters/64X64 Face/Teacher_M_A.png",
+		"sprite": "res://Assets/KW_School_Characters/16x16 Character/Teacher_M_A.png",
 		"subject": "ALGORITHMS & BIG-O",
-		"sign": "🏛️ SEMESTER 1: PROF. STERLING'S EXAMINATION HALL 🏛️",
+		"sign": "🏛️ LEVEL 1: PROF. STERLING'S EXAMINATION HALL 🏛️",
 		"questions": [
 			{
 				"q": "What is the time complexity of searching a sorted array using Binary Search?",
@@ -248,11 +332,11 @@ const LEVEL_TEACHERS = {
 	},
 	2: {
 		"name": "Dr. Evelyn Vance",
-		"title": "Semester 2: Computer Networks & Cyber Infrastructure",
-		"sprite": "res://Assets/Characters/teacher_lvl2.png",
+		"title": "Level 2: Computer Networks & Cyber Infrastructure",
 		"face": "res://Assets/KW_School_Characters/64X64 Face/Teacher_F_A.png",
+		"sprite": "res://Assets/KW_School_Characters/16x16 Character/Teacher_F_A.png",
 		"subject": "NETWORKING & SECURITY",
-		"sign": "🏛️ SEMESTER 2: DR. EVELYN VANCE'S CYBER LAB 🏛️",
+		"sign": "🏛️ LEVEL 2: DR. EVELYN VANCE'S CYBER LAB 🏛️",
 		"questions": [
 			{
 				"q": "What default port is used worldwide for encrypted HTTPS network traffic?",
@@ -283,11 +367,11 @@ const LEVEL_TEACHERS = {
 	},
 	3: {
 		"name": "Prof. Marcus Thorne",
-		"title": "Semester 3: Database Architecture & Cloud Scaling",
-		"sprite": "res://Assets/Characters/teacher_lvl3.png",
+		"title": "Level 3: Database Architecture & Cloud Scaling",
 		"face": "res://Assets/KW_School_Characters/64X64 Face/Teacher_M_B.png",
+		"sprite": "res://Assets/KW_School_Characters/16x16 Character/Teacher_M_B.png",
 		"subject": "DATABASES & CLOUD",
-		"sign": "🏛️ SEMESTER 3: PROF. THORNE'S DATABASE ARENA 🏛️",
+		"sign": "🏛️ LEVEL 3: PROF. THORNE'S DATABASE ARENA 🏛️",
 		"questions": [
 			{
 				"q": "What does SQL stand for in relational database management?",
@@ -318,11 +402,11 @@ const LEVEL_TEACHERS = {
 	},
 	4: {
 		"name": "Dr. Samantha Hayes",
-		"title": "Semester 4: Artificial Intelligence & Machine Learning",
-		"sprite": "res://Assets/Characters/teacher_lvl4.png",
+		"title": "Level 4: Artificial Intelligence & Neural Networks",
 		"face": "res://Assets/KW_School_Characters/64X64 Face/Teacher_F_B.png",
+		"sprite": "res://Assets/KW_School_Characters/16x16 Character/Teacher_F_B.png",
 		"subject": "AI & NEURAL NETWORKS",
-		"sign": "🏛️ SEMESTER 4: DR. HAYES'S AI RESEARCH HALL 🏛️",
+		"sign": "🏛️ LEVEL 4: DR. HAYES'S AI RESEARCH HALL 🏛️",
 		"questions": [
 			{
 				"q": "Which algorithm calculates gradients via the chain rule to train Neural Networks?",
@@ -352,12 +436,188 @@ const LEVEL_TEACHERS = {
 		]
 	},
 	5: {
-		"name": "Dean Arthur Vance",
-		"title": "Semester 5: Capstone Review & The Grand Examination",
-		"sprite": "res://Assets/Characters/teacher_lvl5.png",
+		"name": "Prof. Vikram Patel",
+		"title": "Level 5: Operating Systems & Compiler Design",
 		"face": "res://Assets/KW_School_Characters/64X64 Face/Teacher_M_C.png",
-		"subject": "CAPSTONE EXAMINATION",
-		"sign": "🏛️ GRAND FINALS: DEAN ARTHUR'S CAPSTONE AUDITORIUM 🏛️",
+		"sprite": "res://Assets/KW_School_Characters/16x16 Character/Teacher_M_C.png",
+		"subject": "KERNELS & COMPILERS",
+		"sign": "🏛️ LEVEL 5: PROF. PATEL'S KERNEL LAB 🏛️",
+		"questions": [
+			{
+				"q": "Which OS scheduling state occurs when a process waits for I/O completion?",
+				"correct": "Blocked / Waiting",
+				"wrongs": ["Running", "Ready", "Terminated"]
+			},
+			{
+				"q": "In compiler optimization, what phase converts AST into machine code instructions?",
+				"correct": "Code Generation",
+				"wrongs": ["Lexical Analysis", "Parsing", "Semantic Analysis"]
+			},
+			{
+				"q": "What mechanism allows virtual memory addresses to translate into physical RAM locations?",
+				"correct": "Page Table & MMU",
+				"wrongs": ["DMA Controller", "Bus Arbiter", "Cache L1"]
+			},
+			{
+				"q": "Which system call in Unix/Linux creates a duplicate child process?",
+				"correct": "fork()",
+				"wrongs": ["exec()", "clone()", "spawn()"]
+			},
+			{
+				"q": "What condition occurs when two processes wait infinitely for resources held by each other?",
+				"correct": "Deadlock",
+				"wrongs": ["Race Condition", "Starvation", "Livelock"]
+			}
+		]
+	},
+	6: {
+		"name": "Dr. Beatrice Dupont",
+		"title": "Level 6: Distributed Systems & Microservices",
+		"face": "res://Assets/KW_School_Characters/64X64 Face/Teacher_F_C.png",
+		"sprite": "res://Assets/KW_School_Characters/16x16 Character/Teacher_F_C.png",
+		"subject": "DISTRIBUTED CLUSTERS",
+		"sign": "🏛️ LEVEL 6: DR. DUPONT'S CLUSTER AUDITORIUM 🏛️",
+		"questions": [
+			{
+				"q": "In CAP theorem, what does the 'P' stand for?",
+				"correct": "Partition Tolerance",
+				"wrongs": ["Performance", "Parallelism", "Persistence"]
+			},
+			{
+				"q": "Which consensus algorithm is widely used in Raft and Paxos implementations?",
+				"correct": "Leader Election",
+				"wrongs": ["Round Robin", "Least Connections", "Consistent Hashing"]
+			},
+			{
+				"q": "What architectural pattern decouples services via publish-subscribe message brokers?",
+				"correct": "Event-Driven Architecture",
+				"wrongs": ["Monolithic Core", "Shared Memory", "Direct RPC"]
+			},
+			{
+				"q": "Which caching strategy writes data to cache and DB simultaneously?",
+				"correct": "Write-Through",
+				"wrongs": ["Write-Back", "Cache-Aside", "Write-Around"]
+			},
+			{
+				"q": "What metric measures the maximum rate of data transmission over a network path?",
+				"correct": "Bandwidth",
+				"wrongs": ["Latency", "Jitter", "Throughput"]
+			}
+		]
+	},
+	7: {
+		"name": "Prof. Kenji Takahashi",
+		"title": "Level 7: Computer Graphics & GPU Shaders",
+		"face": "res://Assets/KW_School_Characters/64X64 Face/Teacher_M_D.png",
+		"sprite": "res://Assets/KW_School_Characters/16x16 Character/Teacher_M_D.png",
+		"subject": "GRAPHICS & RAYS",
+		"sign": "🏛️ LEVEL 7: PROF. TAKAHASHI'S RENDERING STUDIO 🏛️",
+		"questions": [
+			{
+				"q": "Which GPU shader stage runs per vertex to project 3D space into 2D coordinates?",
+				"correct": "Vertex Shader",
+				"wrongs": ["Fragment Shader", "Compute Shader", "Tessellation Shader"]
+			},
+			{
+				"q": "What matrix transforms model coordinates into world space coordinates?",
+				"correct": "Model Matrix",
+				"wrongs": ["Projection Matrix", "View Matrix", "Normal Matrix"]
+			},
+			{
+				"q": "Which lighting model combines Ambient, Diffuse, and Specular light components?",
+				"correct": "Phong Reflection Model",
+				"wrongs": ["Ray Marching", "Radiosity", "Subsurface Scattering"]
+			},
+			{
+				"q": "What texture filtering technique prevents aliasing on distant tilted surfaces?",
+				"correct": "Anisotropic Filtering",
+				"wrongs": ["Bilinear Filtering", "Nearest Neighbor", "Trilinear Filtering"]
+			},
+			{
+				"q": "What rendering technique simulates realistic lighting by tracing ray paths?",
+				"correct": "Ray Tracing",
+				"wrongs": ["Rasterization", "Sprite Stacking", "Z-Buffering"]
+			}
+		]
+	},
+	8: {
+		"name": "Dr. Sofia Rodriguez",
+		"title": "Level 8: Embedded Robotics & Microcontrollers",
+		"face": "res://Assets/KW_School_Characters/64X64 Face/Teacher_F_D.png",
+		"sprite": "res://Assets/KW_School_Characters/16x16 Character/Teacher_F_D.png",
+		"subject": "EMBEDDED ROBOTICS",
+		"sign": "🏛️ LEVEL 8: DR. RODRIGUEZ'S ROBOTICS HANGAR 🏛️",
+		"questions": [
+			{
+				"q": "What type of controller uses Proportional, Integral, and Derivative feedback?",
+				"correct": "PID Controller",
+				"wrongs": ["Bang-Bang Controller", "State Machine", "PWM Driver"]
+			},
+			{
+				"q": "Which serial bus protocol uses SDA and SCL lines for multi-master communication?",
+				"correct": "I2C Bus",
+				"wrongs": ["SPI Bus", "UART Serial", "CAN Bus"]
+			},
+			{
+				"q": "What technique controls motor speed by varying signal pulse width on/off ratios?",
+				"correct": "PWM (Pulse-Width Modulation)",
+				"wrongs": ["Frequency Modulation", "Amplitude Shift", "Phase Inversion"]
+			},
+			{
+				"q": "Which sensor measures angular velocity and orientation changes in robotics?",
+				"correct": "Gyroscope",
+				"wrongs": ["Barometer", "Thermistor", "Hall Effect Sensor"]
+			},
+			{
+				"q": "What component prevents inductive voltage spikes from damaging microcontroller pins when driving motors?",
+				"correct": "Flyback Diode",
+				"wrongs": ["Pull-up Resistor", "Zener Diode", "Decoupling Capacitor"]
+			}
+		]
+	},
+	9: {
+		"name": "Prof. Alexander Wright",
+		"title": "Level 9: Advanced Cryptography & Quantum Computing",
+		"face": "res://Assets/KW_School_Characters/64X64 Face/Teacher_M_E.png",
+		"sprite": "res://Assets/KW_School_Characters/16x16 Character/Teacher_M_E.png",
+		"subject": "QUANTUM COMPUTING",
+		"sign": "🏛️ LEVEL 9: PROF. WRIGHT'S QUANTUM LAB 🏛️",
+		"questions": [
+			{
+				"q": "What fundamental quantum phenomenon allows qubits to exist in 0, 1, or both states simultaneously?",
+				"correct": "Superposition",
+				"wrongs": ["Entanglement", "Quantum Tunneling", "Decoherence"]
+			},
+			{
+				"q": "Which quantum algorithm provides quadratic speedup for unstructured database search?",
+				"correct": "Grover's Algorithm",
+				"wrongs": ["Shor's Algorithm", "Deutsch-Jozsa", "Simon's Algorithm"]
+			},
+			{
+				"q": "What post-quantum cryptography approach relies on high-dimensional mathematical lattices?",
+				"correct": "Lattice-Based Cryptography",
+				"wrongs": ["RSA 4096", "Elliptic Curve ED25519", "Diffie-Hellman"]
+			},
+			{
+				"q": "What unit of quantum information is the 2-state quantum mechanical system equivalent of a classical bit?",
+				"correct": "Qubit",
+				"wrongs": ["Qbyte", "Quat", "Trit"]
+			},
+			{
+				"q": "Which quantum principle prevents copying an unknown quantum state exactly?",
+				"correct": "No-Cloning Theorem",
+				"wrongs": ["Heisenberg Uncertainty", "Pauli Exclusion", "Bell Inequality"]
+			}
+		]
+	},
+	10: {
+		"name": "Principal Arthur Pendelton",
+		"title": "Level 10: Grand Capstone Examination & Graduation Finals",
+		"face": "res://Assets/KW_School_Characters/64X64 Face/Other_M_B.png",
+		"sprite": "res://Assets/KW_School_Characters/16x16 Character/Other_M_B.png",
+		"subject": "GRAND FINALS (ALL SUBJECTS)",
+		"sign": "🏛️ LEVEL 10: PRINCIPAL PENDELTON'S GRAND CAPSTONE AUDITORIUM 🏛️",
+		"quote": "So... you have finally come!",
 		"questions": [
 			{
 				"q": "In Git, which command stages all modified and newly created files in workspace?",
@@ -365,7 +625,7 @@ const LEVEL_TEACHERS = {
 				"wrongs": ["git push -all", "git commit -a", "git stage --hard"]
 			},
 			{
-				"q": "What problem asks if every problem whose solution can be quickly verified can also be solved quickly?",
+				"q": "What millennium prize problem asks if P equals NP in computational complexity?",
 				"correct": "P versus NP",
 				"wrongs": ["Halting Problem", "Turing Completeness", "Traveling Salesperson"]
 			},
@@ -388,10 +648,13 @@ const LEVEL_TEACHERS = {
 	}
 }
 
+var is_character_skill_used: bool = false
+
 func reset_run_state() -> void:
 	is_multiplier_active = false
 	is_magnet_active = false
 	has_shield = false
+	is_character_skill_used = false
 	power_up_timer = 0.0
 	lifelines = 3
 	hints = 0
@@ -414,7 +677,7 @@ func get_current_character() -> Dictionary:
 
 
 func get_current_teacher() -> Dictionary:
-	var lvl: int = clampi(current_level, 1, 5)
+	var lvl: int = clampi(current_level, 1, 10)
 	if LEVEL_TEACHERS.has(lvl):
 		return LEVEL_TEACHERS[lvl]
 	return LEVEL_TEACHERS[1]

@@ -30,29 +30,48 @@ const MEMORY_BANK = [
 
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
+	area_entered.connect(_on_area_entered)
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if not is_collected and sprite:
 		sprite.position.y = sin(Time.get_ticks_msec() * 0.006) * 3.0
 
+func _on_area_entered(area: Area2D) -> void:
+	var p = area.get_parent()
+	if p and (p.is_in_group("player") or p.name == "Player"):
+		_collect(p)
+
 func _on_body_entered(body: Node2D) -> void:
+	if body.is_in_group("player") or body.name == "Player":
+		_collect(body)
+
+func _collect(body: Node2D) -> void:
 	if is_collected:
 		return
-	if body.is_in_group("player") or body.name == "Player":
-		is_collected = true
-		emit_signal("collected")
-		if sfx:
-			sfx.play()
+	is_collected = true
+	emit_signal("collected")
+	if sfx:
+		sfx.play()
 
-		# Select fact and store into GameSettings learned shards!
-		var memory = MEMORY_BANK[randi() % MEMORY_BANK.size()]
-		GameSettings.learned_memory_shards.append(memory)
+	# Select fact and store into GameSettings learned shards!
+	var memory = MEMORY_BANK[randi() % MEMORY_BANK.size()]
+	GameSettings.learned_memory_shards.append(memory)
+	GameSettings.knowledge_score += 50
+	if body.has_method("heal"):
+		body.heal(1)
 
-		var hud = get_tree().root.find_child("HUD", true, false)
-		if hud and hud.has_method("show_memory_shard_banner"):
+	var hud = get_tree().get_first_node_in_group("hud")
+	if not hud and get_tree().current_scene:
+		hud = get_tree().current_scene.get_node_or_null("HUD")
+	if hud:
+		if hud.has_method("show_memory_shard_banner"):
 			hud.show_memory_shard_banner(memory["fact"])
+		if hud.has_method("show_floating_text"):
+			hud.show_floating_text("📜 MEMORY RECOVERED! (+50 PTS)", global_position + Vector2(0, -10), Color(0.4, 0.9, 1.0))
+		if hud.has_method("update_hud_instant"):
+			hud.update_hud_instant()
 
-		var tween := create_tween()
-		tween.tween_property(self, "position:y", position.y - 20.0, 0.25)
-		tween.parallel().tween_property(self, "modulate:a", 0.0, 0.25)
-		tween.tween_callback(queue_free)
+	var tween := create_tween()
+	tween.tween_property(self, "position:y", position.y - 20.0, 0.25)
+	tween.parallel().tween_property(self, "modulate:a", 0.0, 0.25)
+	tween.tween_callback(queue_free)

@@ -11,9 +11,9 @@ var SPEED: float = 280.0:
 var WALK_SPEED: float = 280.0
 const ACCELERATION := 2000.0
 const FRICTION := 1800.0
-const JUMP_FORCE := -390.0
-const DOUBLE_JUMP_FORCE := -350.0
-const GRAVITY := 1250.0
+var JUMP_FORCE: float = -420.0
+var DOUBLE_JUMP_FORCE: float = -410.0
+var GRAVITY: float = 1250.0
 const COYOTE_TIME := 0.15
 const JUMP_BUFFER_TIME := 0.12
 const SLIDE_DURATION := 0.42
@@ -51,6 +51,11 @@ var is_controlled: bool = true
 var is_sliding: bool = false
 var is_attacking: bool = false
 
+var raw_jump_pressed: bool = false
+var raw_jump_released: bool = false
+var raw_slide_pressed: bool = false
+var raw_attack_pressed: bool = false
+
 func _ready() -> void:
 	add_to_group("player")
 	spawn_point = global_position
@@ -69,6 +74,7 @@ func _draw() -> void:
 
 func setup_character_appearance() -> void:
 	var char_info: Dictionary = GameSettings.get_current_character()
+	var char_id: String = char_info.get("id", "student_m_a")
 	var char_tex_path: String = char_info.get("sprite", "res://Assets/Player/runner_student_m_a.png")
 	var char_tex: Texture2D = load(char_tex_path)
 	if not char_tex:
@@ -88,6 +94,24 @@ func setup_character_appearance() -> void:
 		sprite.visible = true
 		sprite.modulate = Color.WHITE
 		sprite.play("run")
+
+	# Apply Unique Character Skill Perks:
+	match char_id:
+		"student_m_a": # Leo Tanaka (Algorithms): +10% Speed
+			SPEED *= 1.10
+			WALK_SPEED *= 1.10
+		"student_m_b": # Kai Sterling (Cybersecurity): Free Shield
+			GameSettings.has_shield = true
+		"student_m_c": # Ren Takahashi (Physics): Low-Gravity Jump
+			JUMP_FORCE = -440.0
+			GRAVITY = 1100.0
+		"student_f_h": # Sayaka Endo (Database): Starts with 2 Hints
+			GameSettings.hints = max(2, GameSettings.hints)
+		"student_f_k": # Erika Von Braun (Cybernetics): 4 Lifelines
+			GameSettings.lifelines = 4
+			health = 4
+			max_health = 4
+			emit_signal("health_changed", health)
 
 func _physics_process(delta: float) -> void:
 	if is_dead:
@@ -142,7 +166,14 @@ func _physics_process(delta: float) -> void:
 				dust.restart()
 				dust.emitting = true
 			if sprite:
-				sprite.scale = Vector2.ONE
+				sprite.scale = Vector2(1.30, 0.70)
+				var tw := create_tween()
+				tw.tween_property(sprite, "scale", Vector2.ONE, 0.15)
+
+	# Ghost Pixel Motion Trail during high speed / skills
+	if velocity.x > 320.0 or GameSettings.power_up_timer > 0.0:
+		if int(Time.get_ticks_msec() / 60) % 2 == 0:
+			spawn_ghost_trail()
 
 	# Apply gravity
 	if not is_on_floor():
@@ -179,10 +210,10 @@ func _physics_process(delta: float) -> void:
 		if coyote_timer > 0.0:
 			# First jump from ground/ledge
 			velocity.y = JUMP_FORCE
-			jump_buffer_timer = 0.0
 			coyote_timer = 0.0
-			landing_timer = 0.0
+			jump_buffer_timer = 0.0
 			jumps_left = 1
+			landing_timer = 0.0
 			play_jump_effects()
 		elif jumps_left > 0:
 			# Fluid mid-air double jump!
@@ -191,13 +222,13 @@ func _physics_process(delta: float) -> void:
 			jumps_left = 0
 			play_jump_effects()
 
-	# Variable jump height cut on key release
-	if is_jump_just_released() and velocity.y < -150.0:
-		velocity.y = -150.0
+	# Variable jump height cut on key release (only on initial jump tap)
+	if is_jump_just_released() and velocity.y < -180.0 and jumps_left == 1:
+		velocity.y = -180.0
 
 	# Responsive Horizontal Movement (A/D or Left/Right Arrow keys)
 	var move_input := get_horizontal_input()
-	var current_speed := WALK_SPEED if not is_sliding else (WALK_SPEED * 1.35)
+	var current_speed := WALK_SPEED
 	
 	if move_input != 0.0:
 		facing_dir = sign(move_input)
@@ -220,6 +251,16 @@ func _physics_process(delta: float) -> void:
 	was_on_floor = is_on_floor()
 	move_and_slide()
 
+	# Hazard collision check (Janitor chase/stopped detention contact)
+	if not is_dead:
+		for i in range(get_slide_collision_count()):
+			var col := get_slide_collision(i)
+			var collider = col.get_collider()
+			if collider and is_instance_valid(collider):
+				if collider.is_in_group("hazards") and collider.has_method("trigger_player_caught"):
+					collider.trigger_player_caught(self)
+					break
+
 	# Fall death / pit boundary check (ground is at y=220; if fell off track y > 300)
 	if global_position.y > 300.0 and not is_dead:
 		take_damage(1)
@@ -232,33 +273,43 @@ func get_horizontal_input() -> float:
 		dir += 1.0
 	return dir
 
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey:
+		var k: int = event.physical_keycode if event.physical_keycode != 0 else event.keycode
+		if k in [KEY_SPACE, KEY_W, KEY_UP]:
+			if event.pressed and not event.echo:
+				raw_jump_pressed = true
+			elif not event.pressed:
+				raw_jump_released = true
+		elif k in [KEY_S, KEY_DOWN]:
+			if event.pressed and not event.echo:
+				raw_slide_pressed = true
+		elif k in [KEY_J, KEY_F, KEY_Z, KEY_X, KEY_C]:
+			if event.pressed and not event.echo:
+				raw_attack_pressed = true
+	elif event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			raw_attack_pressed = true
+
 func is_jump_just_pressed() -> bool:
-	return Input.is_physical_key_pressed(KEY_SPACE) or \
-		   Input.is_physical_key_pressed(KEY_W) or \
-		   Input.is_physical_key_pressed(KEY_UP) or \
-		   Input.is_action_just_pressed("ui_accept") or \
-		   Input.is_action_just_pressed("ui_up")
+	var pressed := raw_jump_pressed or Input.is_action_just_pressed("ui_accept") or Input.is_action_just_pressed("ui_up")
+	raw_jump_pressed = false
+	return pressed
 
 func is_jump_just_released() -> bool:
-	var jump_held: bool = Input.is_physical_key_pressed(KEY_SPACE) or \
-						  Input.is_physical_key_pressed(KEY_W) or \
-						  Input.is_physical_key_pressed(KEY_UP) or \
-						  Input.is_action_pressed("ui_accept") or \
-						  Input.is_action_pressed("ui_up")
-	return not jump_held
+	var rel := raw_jump_released or Input.is_action_just_released("ui_accept") or Input.is_action_just_released("ui_up")
+	raw_jump_released = false
+	return rel
 
 func is_slide_just_pressed() -> bool:
-	return Input.is_physical_key_pressed(KEY_S) or \
-		   Input.is_physical_key_pressed(KEY_DOWN) or \
-		   Input.is_action_just_pressed("ui_down")
+	var pressed := raw_slide_pressed or Input.is_action_just_pressed("ui_down")
+	raw_slide_pressed = false
+	return pressed
 
 func is_attack_just_pressed() -> bool:
-	return Input.is_physical_key_pressed(KEY_J) or \
-		   Input.is_physical_key_pressed(KEY_F) or \
-		   Input.is_physical_key_pressed(KEY_Z) or \
-		   Input.is_physical_key_pressed(KEY_X) or \
-		   Input.is_physical_key_pressed(KEY_C) or \
-		   Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)
+	var pressed := raw_attack_pressed
+	raw_attack_pressed = false
+	return pressed
 
 func play_jump_effects() -> void:
 	if jump_sfx:
@@ -267,7 +318,9 @@ func play_jump_effects() -> void:
 		dust.restart()
 		dust.emitting = true
 	if sprite:
-		sprite.scale = Vector2.ONE
+		sprite.scale = Vector2(0.70, 1.35)
+		var tw := create_tween()
+		tw.tween_property(sprite, "scale", Vector2.ONE, 0.18)
 
 func start_attack() -> void:
 	is_attacking = true
@@ -365,11 +418,11 @@ func take_damage(amount: int = 1) -> void:
 		hazard_respawn_ahead()
 
 func hazard_respawn_ahead() -> void:
-	# Put player slightly ahead of where they fell/hit, onto safe track level (y=190)
-	global_position = Vector2(global_position.x + 85.0, 190.0)
+	# Put player safely ahead of where they fell/hit (past moving block gaps), onto safe track level (y=190)
+	global_position = Vector2(global_position.x + 220.0, 190.0)
 	velocity = Vector2(WALK_SPEED, 0.0)
 	hurt_timer = 0.2
-	invulnerable_timer = 1.6 # 1.6s invulnerability flicker
+	invulnerable_timer = 2.0 # 2.0s invulnerability flicker
 	is_sliding = false
 	is_attacking = false
 	if sprite:
@@ -379,6 +432,13 @@ func hazard_respawn_ahead() -> void:
 
 func set_checkpoint(pos: Vector2) -> void:
 	spawn_point = pos
+
+func heal(amount: int = 1) -> void:
+	if is_dead:
+		return
+	GameSettings.lifelines = min(max_health, GameSettings.lifelines + amount)
+	health = GameSettings.lifelines
+	emit_signal("health_changed", health)
 
 func die() -> void:
 	if is_dead:
@@ -431,3 +491,117 @@ func respawn_to_start() -> void:
 
 func respawn() -> void:
 	respawn_to_start()
+
+func trigger_unique_skill() -> bool:
+	if GameSettings.is_character_skill_used or is_dead:
+		return false
+
+	GameSettings.is_character_skill_used = true
+	var char_info: Dictionary = GameSettings.get_current_character()
+	var char_id: String = char_info.get("id", "student_m_a")
+
+	match char_id:
+		"student_m_a": # Leo: Sprint Surge 5s (Smooth temporary boost)
+			invulnerable_timer = 5.0
+			var orig_spd := WALK_SPEED
+			WALK_SPEED = orig_spd * 1.20
+			var tw := create_tween()
+			tw.tween_interval(5.0)
+			tw.tween_property(self, "WALK_SPEED", orig_spd, 0.4)
+		"student_m_b": # Kai: Firewall Shield
+			GameSettings.has_shield = true
+			invulnerable_timer = 2.0
+		"student_m_c": # Ren: Low Gravity Launch
+			velocity.y = -520.0
+			invulnerable_timer = 3.0
+		"student_m_d": # Jin: Cloud Restore 1 Heart
+			GameSettings.lifelines = min(max_health, GameSettings.lifelines + 1)
+			health = GameSettings.lifelines
+			emit_signal("health_changed", health)
+		"student_m_e": # Arata: Overclock 12s Magnet
+			GameSettings.activate_tech_power_up(12.0)
+		"student_m_f": # Daiki: Bloom Radiance 2X Score
+			GameSettings.is_multiplier_active = true
+			GameSettings.power_up_timer = 15.0
+		"student_m_g": # Haruto: Zero-Cost Abstraction
+			invulnerable_timer = 3.0
+		"student_m_h": # Kaito: Cluster Surge
+			GameSettings.activate_tech_power_up(10.0)
+		"student_m_i": # Sora: Cellular Heal
+			GameSettings.lifelines = min(max_health, GameSettings.lifelines + 1)
+			health = GameSettings.lifelines
+			emit_signal("health_changed", health)
+		"student_m_j": # Riku: DMA Surge
+			GameSettings.knowledge_score += 50
+		"student_m_k": # Shinjiro: Quantum Phase
+			invulnerable_timer = 6.0
+		"student_f_a": # Maya: Agile Hyper Dash
+			velocity.x = 600.0
+			invulnerable_timer = 3.0
+		"student_f_b": # Chloe: Data Mining
+			GameSettings.activate_tech_power_up(10.0)
+		"student_f_c": # Aoi: Predictive AI
+			GameSettings.hints += 1
+		"student_f_d": # Yuna: Exploit Bypass Shield
+			GameSettings.has_shield = true
+			invulnerable_timer = 3.0
+		"student_f_e": # Hana: Ergonomic Buffer
+			GameSettings.knowledge_score += 40
+		"student_f_f": # Rin: Phantom Magnetism
+			GameSettings.is_magnet_active = true
+			GameSettings.power_up_timer = 14.0
+		"student_f_g": # Mei: Thermal Vision
+			invulnerable_timer = 4.0
+		"student_f_h": # Sayaka: B-Tree Cache
+			GameSettings.hints += 1
+			GameSettings.knowledge_score += 25
+		"student_f_i": # Sakura: Kernel Interrupt
+			invulnerable_timer = 5.0
+		"student_f_j": # Nozomi: Proximity Sensor
+			invulnerable_timer = 4.0
+		"student_f_k", _: # Erika: Nanite Repair
+			GameSettings.lifelines = 4
+			health = 4
+			GameSettings.has_shield = true
+			emit_signal("health_changed", health)
+
+	return true
+
+func spawn_ghost_trail() -> void:
+	if not sprite or not sprite.sprite_frames:
+		return
+	var current_anim = sprite.animation
+	var current_frame = sprite.frame
+	var frame_tex = sprite.sprite_frames.get_frame_texture(current_anim, current_frame)
+	if not frame_tex:
+		return
+	var ghost := Sprite2D.new()
+	ghost.texture = frame_tex
+	ghost.global_position = sprite.global_position
+	ghost.scale = sprite.scale
+	ghost.flip_h = sprite.flip_h
+	ghost.rotation = sprite.rotation
+	ghost.modulate = Color(0.2, 0.9, 1.0, 0.45)
+	ghost.top_level = true
+	get_parent().add_child(ghost)
+
+	var tw := create_tween()
+	tw.tween_property(ghost, "modulate:a", 0.0, 0.25)
+	tw.tween_callback(ghost.queue_free)
+
+func trigger_hit_stop(duration: float = 0.06) -> void:
+	Engine.time_scale = 0.05
+	await get_tree().create_timer(duration * 0.05, true, false, true).timeout
+	Engine.time_scale = 1.0
+
+func _on_attack_area_entered(area: Area2D) -> void:
+	if area.has_method("take_damage"):
+		area.take_damage()
+	elif area.is_in_group("hazards") or area.is_in_group("enemies"):
+		if area.has_method("deactivate_and_fade"):
+			area.deactivate_and_fade()
+		else:
+			var tw := create_tween()
+			tw.tween_property(area, "scale", Vector2.ZERO, 0.1)
+			tw.tween_callback(area.queue_free)
+

@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://Scripts/Objects/janitor_chase.gd" id="1_janitorgd"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_janitor"]
+size = Vector2(20, 28)
+
+[node name="JanitorChase" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 1
+up_direction = Vector2(0, -1)
+floor_max_angle = 0.785398
+script = ExtResource("1_janitorgd")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -14)
+shape = SubResource("RectangleShape2D_janitor")

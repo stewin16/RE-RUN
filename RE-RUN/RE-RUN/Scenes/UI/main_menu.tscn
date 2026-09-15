@@ -1,10 +1,10 @@
-[gd_scene load_steps=15 format=3]
+[gd_scene load_steps=18 format=3]
 
 [ext_resource type="Script" path="res://Scripts/UI/main_menu.gd" id="1_mmgd"]
 [ext_resource type="Texture2D" path="res://Assets/Backgrounds/city_sky.png" id="2_sky"]
 [ext_resource type="Texture2D" path="res://Assets/Backgrounds/city_distant.png" id="3_distant"]
 [ext_resource type="Texture2D" path="res://Assets/Backgrounds/city_near.png" id="4_near"]
-[ext_resource type="Texture2D" path="res://Assets/Player/student_runner.png" id="5_runner"]
+[ext_resource type="Texture2D" path="res://Assets/Player/runner_student_m_a.png" id="5_runner"]
 [ext_resource type="AudioStream" path="res://Assets/Audio/click.wav" id="6_clicksfx"]
 [ext_resource type="AudioStream" path="res://Assets/Audio/bgm.wav" id="7_bgm"]
 [ext_resource type="Texture2D" path="res://Assets/Backgrounds/pixel_stars.png" id="8_stars"]
@@ -61,12 +61,62 @@ animations = [{
 }]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_modal"]
-bg_color = Color(0.0941176, 0.0784314, 0.145098, 0.96)
+bg_color = Color(0.08, 0.07, 0.14, 0.96)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.960784, 0.619608, 0.0431373, 1)
+border_color = Color(0.96, 0.62, 0.04, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_skill"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_circular_skill"]
+bg_color = Color(0.08, 0.07, 0.14, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.2, 0.95, 0.5, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_left = 4
+corner_radius_bottom_right = 4
+content_margin_left = 3.0
+content_margin_top = 3.0
+content_margin_right = 3.0
+content_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
+bg_color = Color(0.06, 0.05, 0.12, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.25, 0.6, 0.95, 0.9)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_left = 4
+corner_radius_bottom_right = 4
+content_margin_left = 8.0
+content_margin_top = 6.0
+content_margin_right = 8.0
+content_margin_bottom = 6.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_face_frame"]
+bg_color = Color(0.05, 0.04, 0.09, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.96, 0.62, 0.04, 0.9)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_left = 3
+corner_radius_bottom_right = 3
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -231,10 +281,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -140.0
-offset_top = -95.0
-offset_right = 140.0
-offset_bottom = 95.0
+offset_left = -220.0
+offset_top = -135.0
+offset_right = 220.0
+offset_bottom = 135.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_modal")
@@ -250,34 +300,77 @@ offset_right = -14.0
 offset_bottom = -10.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 5
+theme_override_constants/separation = 6
 alignment = 1
 
 [node name="Title" type="Label" parent="HowToPanel/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.960784, 0.619608, 0.0431373, 1)
-theme_override_font_sizes/font_size = 14
-text = "HOW TO PLAY"
+theme_override_font_sizes/font_size = 12
+text = "🚨 CAMPUS CHASE: THE LORE 🚨"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="HowToPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 9
+text = "WHY THE JANITOR IS AFTER YOU!"
 horizontal_alignment = 1
 
 [node name="Instr" type="Label" parent="HowToPanel/VBox"]
+custom_minimum_size = Vector2(0, 135)
 layout_mode = 2
-text = "A / D or LEFT / RIGHT : MOVE & RUN
-SPACE / W / UP : JUMP (DOUBLE JUMP IN AIR)
-S / DOWN : SLIDE UNDER PIPES & BARRIERS
-J / F / Z / L-CLICK : ENERGY SLASH / ACTION
+theme_override_font_sizes/font_size = 8
+text = "It is 2:00 AM during Finals Week!
 
-● COLLECT COINS FOR HIGH SCORE
-⚠ AVOID SPIKES & PIPES | GAIN SPEED
-★ NEAR MISSES GRANT +50 BONUS POINTS"
+You accidentally spilled a double-shot iced espresso straight into the IT lab mainframe computer while finishing your thesis!
+
+Now Campus Security & the Head Janitor are in hot pursuit! Sprint through campus, dodge hazards, and survive!"
 horizontal_alignment = 1
+vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="CloseBtn" type="Button" parent="HowToPanel/VBox"]
+[node name="NavHBox" type="HBoxContainer" parent="HowToPanel/VBox"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 12
+
+[node name="PrevSlideBtn" type="Button" parent="HowToPanel/VBox/NavHBox"]
 layout_mode = 2
 focus_mode = 0
-theme_override_font_sizes/font_size = 11
-text = "BACK"
+theme_override_font_sizes/font_size = 9
+text = "◀ PREV"
+
+[node name="PageLabel" type="Label" parent="HowToPanel/VBox/NavHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.2, 1)
+theme_override_font_sizes/font_size = 9
+text = "SLIDE 1 / 4"
+horizontal_alignment = 1
+
+[node name="NextSlideBtn" type="Button" parent="HowToPanel/VBox/NavHBox"]
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 9
+text = "NEXT ▶"
+
+[node name="BottomHBox" type="HBoxContainer" parent="HowToPanel/VBox"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 16
+
+[node name="CloseBtn" type="Button" parent="HowToPanel/VBox/BottomHBox"]
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 9
+text = "BACK TO MENU"
+
+[node name="StartRunBtn" type="Button" parent="HowToPanel/VBox/BottomHBox"]
+layout_mode = 2
+focus_mode = 0
+theme_override_colors/font_color = Color(0.2, 0.95, 0.5, 1)
+theme_override_font_sizes/font_size = 9
+text = "🚀 START RUN!"
 
 [node name="SettingsPanel" type="Panel" parent="."]
 visible = false
@@ -371,10 +464,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -190.0
-offset_top = -115.0
-offset_right = 190.0
-offset_bottom = 115.0
+offset_left = -225.0
+offset_top = -125.0
+offset_right = 225.0
+offset_bottom = 125.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_modal")
@@ -384,26 +477,25 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 12.0
-offset_top = 8.0
-offset_right = -12.0
-offset_bottom = -8.0
+offset_left = 10.0
+offset_top = 6.0
+offset_right = -10.0
+offset_bottom = -6.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 4
 alignment = 1
 
 [node name="Title" type="Label" parent="CharPanel/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.96, 0.62, 0.04, 1)
+theme_override_colors/font_color = Color(1, 0.85, 0.15, 1)
 theme_override_font_sizes/font_size = 9
-text = "🎓 CHOOSE YOUR RUNNER (COLLEGE ROSTER) 🎓"
+text = "CHOOSE YOUR RUNNER (COLLEGE ROSTER)"
 horizontal_alignment = 1
-autowrap_mode = 2
 
 [node name="CarouselHBox" type="HBoxContainer" parent="CharPanel/VBox"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 6
 alignment = 1
 
 [node name="PrevCharBtn" type="Button" parent="CharPanel/VBox/CarouselHBox"]
@@ -414,19 +506,25 @@ theme_override_font_sizes/font_size = 14
 text = "◀"
 
 [node name="ProfileCard" type="PanelContainer" parent="CharPanel/VBox/CarouselHBox"]
-custom_minimum_size = Vector2(280, 72)
+custom_minimum_size = Vector2(340, 120)
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
 
 [node name="CardContent" type="HBoxContainer" parent="CharPanel/VBox/CarouselHBox/ProfileCard"]
 layout_mode = 2
 theme_override_constants/separation = 10
 alignment = 1
 
-[node name="FaceRect" type="TextureRect" parent="CharPanel/VBox/CarouselHBox/ProfileCard/CardContent"]
-texture_filter = 1
-custom_minimum_size = Vector2(60, 60)
+[node name="FaceFrame" type="PanelContainer" parent="CharPanel/VBox/CarouselHBox/ProfileCard/CardContent"]
+custom_minimum_size = Vector2(68, 68)
 layout_mode = 2
 size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_face_frame")
+
+[node name="FaceRect" type="TextureRect" parent="CharPanel/VBox/CarouselHBox/ProfileCard/CardContent/FaceFrame"]
+texture_filter = 1
+layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 
@@ -438,29 +536,55 @@ alignment = 1
 
 [node name="NameLabel" type="Label" parent="CharPanel/VBox/CarouselHBox/ProfileCard/CardContent/InfoVBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_colors/font_color = Color(1, 0.88, 0.2, 1)
 theme_override_font_sizes/font_size = 11
 text = "LEO TANAKA"
 
 [node name="MajorLabel" type="Label" parent="CharPanel/VBox/CarouselHBox/ProfileCard/CardContent/InfoVBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.2, 0.9, 1, 1)
-theme_override_font_sizes/font_size = 9
+theme_override_font_sizes/font_size = 8
 text = "Computer Science (Core Algorithms)"
 autowrap_mode = 2
 
-[node name="DescLabel" type="Label" parent="CharPanel/VBox/CarouselHBox/ProfileCard/CardContent/InfoVBox"]
+[node name="SkillCardHBox" type="HBoxContainer" parent="CharPanel/VBox/CarouselHBox/ProfileCard/CardContent/InfoVBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="SkillBtnFrame" type="PanelContainer" parent="CharPanel/VBox/CarouselHBox/ProfileCard/CardContent/InfoVBox/SkillCardHBox"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_skill")
+
+[node name="SkillIconRect" type="TextureRect" parent="CharPanel/VBox/CarouselHBox/ProfileCard/CardContent/InfoVBox/SkillCardHBox/SkillBtnFrame"]
+layout_mode = 2
+texture_filter = 1
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SkillTextVBox" type="VBoxContainer" parent="CharPanel/VBox/CarouselHBox/ProfileCard/CardContent/InfoVBox/SkillCardHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 1
+
+[node name="SkillNameLabel" type="Label" parent="CharPanel/VBox/CarouselHBox/ProfileCard/CardContent/InfoVBox/SkillCardHBox/SkillTextVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.95, 0.5, 1)
+theme_override_font_sizes/font_size = 8
+text = "OPTIMIZED VELOCITY"
+
+[node name="SkillDescLabel" type="Label" parent="CharPanel/VBox/CarouselHBox/ProfileCard/CardContent/InfoVBox/SkillCardHBox/SkillTextVBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.9, 0.95, 1)
-theme_override_font_sizes/font_size = 8
-text = "Sprint Specialist — Navy Gakuran & Gold Buttons"
+theme_override_font_sizes/font_size = 7
+text = "+10% Base Sprint Speed & Faster Acceleration"
 autowrap_mode = 2
 
 [node name="StatusLabel" type="Label" parent="CharPanel/VBox/CarouselHBox/ProfileCard/CardContent/InfoVBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.25, 0.95, 0.45, 1)
+theme_override_colors/font_color = Color(0.3, 0.95, 0.5, 0.9)
 theme_override_font_sizes/font_size = 8
-text = "★ ACTIVE RUNNER ★"
+text = "STUDENT 1 / 22 (READY TO RUN)"
 
 [node name="NextCharBtn" type="Button" parent="CharPanel/VBox/CarouselHBox"]
 custom_minimum_size = Vector2(28, 64)
@@ -478,28 +602,28 @@ alignment = 1
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 0
-theme_override_font_sizes/font_size = 9
+theme_override_font_sizes/font_size = 8
 text = "◀ PREV"
 
 [node name="MaleGroupBtn" type="Button" parent="CharPanel/VBox/QuickSelectHBox"]
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 0
-theme_override_font_sizes/font_size = 9
+theme_override_font_sizes/font_size = 8
 text = "MALE (11)"
 
 [node name="FemaleGroupBtn" type="Button" parent="CharPanel/VBox/QuickSelectHBox"]
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 0
-theme_override_font_sizes/font_size = 9
+theme_override_font_sizes/font_size = 8
 text = "FEMALE (11)"
 
 [node name="NextBtn" type="Button" parent="CharPanel/VBox/QuickSelectHBox"]
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 0
-theme_override_font_sizes/font_size = 9
+theme_override_font_sizes/font_size = 8
 text = "NEXT ▶"
 
 [node name="BottomHBox" type="HBoxContainer" parent="CharPanel/VBox"]
@@ -512,8 +636,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 0
 theme_override_font_sizes/font_size = 10
-text = "START RUN AS RUNNER"
-clip_text = true
+text = "SELECT & RUN"
 
 [node name="CloseCharBtn" type="Button" parent="CharPanel/VBox/BottomHBox"]
 layout_mode = 2
@@ -535,7 +658,10 @@ autoplay = true
 [connection signal="pressed" from="MenuContainer/VBox/Buttons/HowToBtn" to="." method="_on_howto_btn_pressed"]
 [connection signal="pressed" from="MenuContainer/VBox/Buttons/SettingsBtn" to="." method="_on_settings_btn_pressed"]
 [connection signal="pressed" from="MenuContainer/VBox/Buttons/QuitBtn" to="." method="_on_quit_btn_pressed"]
-[connection signal="pressed" from="HowToPanel/VBox/CloseBtn" to="." method="_on_close_howto_pressed"]
+[connection signal="pressed" from="HowToPanel/VBox/NavHBox/PrevSlideBtn" to="." method="_on_prev_slide_pressed"]
+[connection signal="pressed" from="HowToPanel/VBox/NavHBox/NextSlideBtn" to="." method="_on_next_slide_pressed"]
+[connection signal="pressed" from="HowToPanel/VBox/BottomHBox/CloseBtn" to="." method="_on_close_howto_pressed"]
+[connection signal="pressed" from="HowToPanel/VBox/BottomHBox/StartRunBtn" to="." method="_on_start_btn_pressed"]
 [connection signal="pressed" from="CharPanel/VBox/CarouselHBox/PrevCharBtn" to="." method="_on_prev_char_pressed"]
 [connection signal="pressed" from="CharPanel/VBox/CarouselHBox/NextCharBtn" to="." method="_on_next_char_pressed"]
 [connection signal="pressed" from="CharPanel/VBox/QuickSelectHBox/PrevBtn" to="." method="_on_prev_char_pressed"]

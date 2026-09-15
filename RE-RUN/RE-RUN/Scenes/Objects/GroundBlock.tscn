@@ -1,18 +1,20 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
-[ext_resource type="Texture2D" path="res://Assets/Tiles/1_Industrial_Tileset_1.png" id="1_tex"]
+[ext_resource type="Script" path="res://Scripts/Objects/ground_block.gd" id="1_gb_script"]
+[ext_resource type="Texture2D" path="res://Assets/Tiles/Biomes/ground_lvl1_city.png" id="2_tex"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gb"]
-size = Vector2(192, 48)
+size = Vector2(192, 74)
 
 [node name="GroundBlock" type="StaticBody2D"]
 collision_mask = 2
+script = ExtResource("1_gb_script")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture_filter = 1
-texture = ExtResource("1_tex")
-region_enabled = true
-region_rect = Rect2(0, 0, 192, 48)
+position = Vector2(0, 13)
+texture = ExtResource("2_tex")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 13)
 shape = SubResource("RectangleShape2D_gb")

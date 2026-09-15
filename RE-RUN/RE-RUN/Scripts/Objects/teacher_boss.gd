@@ -21,34 +21,35 @@ func _ready() -> void:
 
 func setup_boss_appearance() -> void:
 	var teacher_data: Dictionary = GameSettings.get_current_teacher()
-	var tex_path: String = teacher_data.get("sprite", "res://Assets/Characters/teacher_boss.png")
-	var tex = load(tex_path)
-	if not tex or (tex.get_width() != 192 or tex.get_height() != 48):
-		tex = load("res://Assets/Characters/teacher_boss.png")
+	var sprite_path: String = teacher_data.get("sprite", "res://Assets/KW_School_Characters/16x16 Character/Teacher_M_A.png")
+	var tex = load(sprite_path)
+	if not tex:
+		tex = load("res://Assets/KW_School_Characters/16x16 Character/Teacher_M_A.png")
 	if tex and sprite:
 		sprite.texture = tex
 		sprite.region_enabled = true
+		sprite.region_rect = Rect2(0, 0, 16, 16)
 		sprite.visible = true
+		sprite.scale = Vector2(2.5, 2.5)
 		sprite.modulate = Color.WHITE
 		sprite.flip_h = true
-
-func _process(delta: float) -> void:
-	if is_active:
-		# Floating levitation
-		position.y = base_y + sin(Time.get_ticks_msec() * 0.004) * 4.0
 
 func play_state(state_name: String) -> void:
 	if not sprite:
 		return
 	match state_name:
 		"idle":
-			sprite.region_rect = Rect2(0, 0, 48, 48)
+			sprite.scale = Vector2(2.5, 2.5)
+			sprite.modulate = Color.WHITE
 		"attack":
-			sprite.region_rect = Rect2(48, 0, 48, 48)
+			sprite.scale = Vector2(3.0, 3.0)
+			sprite.modulate = Color(1.0, 0.85, 0.3)
 		"hurt":
-			sprite.region_rect = Rect2(96, 0, 48, 48)
+			sprite.scale = Vector2(2.1, 2.1)
+			sprite.modulate = Color(1.0, 0.3, 0.3)
 		"defeat":
-			sprite.region_rect = Rect2(144, 0, 48, 48)
+			sprite.scale = Vector2(2.5, 2.5)
+			sprite.modulate = Color(0.4, 0.4, 0.5, 0.6)
 
 func take_exam_damage() -> void:
 	hp = max(0, hp - 1)

@@ -1,0 +1,84 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://Scripts/Levels/alternate_realm.gd" id="1_realm"]
+[ext_resource type="PackedScene" path="res://Scenes/Player/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" path="res://Scenes/UI/hud.tscn" id="3_hud"]
+[ext_resource type="Texture2D" path="res://Assets/Backgrounds/AlternateRealm/cityfar.png" id="4_far"]
+[ext_resource type="Texture2D" path="res://Assets/Backgrounds/AlternateRealm/citymid.png" id="5_mid"]
+[ext_resource type="Texture2D" path="res://Assets/Backgrounds/AlternateRealm/cityclose.png" id="6_close"]
+[ext_resource type="Texture2D" path="res://Assets/Items/AlternateRealm/celestial_ring.png" id="7_ring"]
+[ext_resource type="AudioStream" path="res://Assets/Audio/dimensional_warp.wav" id="8_bgm"]
+
+[node name="AlternateRealm" type="Node2D"]
+script = ExtResource("1_realm")
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="VoidSkyLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.01, 0.01)
+motion_mirroring = Vector2(480, 0)
+
+[node name="ColorRect" type="ColorRect" parent="ParallaxBackground/VoidSkyLayer"]
+offset_right = 480.0
+offset_bottom = 270.0
+color = Color(0.08, 0.04, 0.12, 1)
+
+[node name="CelestialLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.02, 0.02)
+
+[node name="CelestialRing" type="Sprite2D" parent="ParallaxBackground/CelestialLayer"]
+texture_filter = 1
+position = Vector2(240, 70)
+scale = Vector2(1.8, 1.8)
+texture = ExtResource("7_ring")
+
+[node name="CityFarLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.18, 0.0)
+motion_mirroring = Vector2(480, 0)
+
+[node name="Sprite" type="TextureRect" parent="ParallaxBackground/CityFarLayer"]
+texture_filter = 1
+offset_top = 0.0
+offset_right = 480.0
+offset_bottom = 270.0
+texture = ExtResource("4_far")
+
+[node name="CityMidLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.35, 0.0)
+motion_mirroring = Vector2(480, 0)
+
+[node name="Sprite" type="TextureRect" parent="ParallaxBackground/CityMidLayer"]
+texture_filter = 1
+offset_top = 0.0
+offset_right = 480.0
+offset_bottom = 270.0
+texture = ExtResource("5_mid")
+
+[node name="CityCloseLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.55, 0.0)
+motion_mirroring = Vector2(480, 0)
+
+[node name="Sprite" type="TextureRect" parent="ParallaxBackground/CityCloseLayer"]
+texture_filter = 1
+offset_top = 0.0
+offset_right = 480.0
+offset_bottom = 270.0
+texture = ExtResource("6_close")
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+position = Vector2(60, 185)
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+position = Vector2(80, -25)
+position_smoothing_enabled = true
+position_smoothing_speed = 7.0
+limit_left = 0
+limit_top = 0
+limit_bottom = 270
+
+[node name="HUD" parent="." instance=ExtResource("3_hud")]
+
+[node name="BGM" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_bgm")
+volume_db = -2.0
+autoplay = true

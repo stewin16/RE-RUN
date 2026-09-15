@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=13 format=3]
 
 [ext_resource type="Script" path="res://Scripts/Levels/level_1.gd" id="1_lvl"]
 [ext_resource type="PackedScene" path="res://Scenes/Player/player.tscn" id="2_player"]
@@ -19,65 +19,69 @@ script = ExtResource("1_lvl")
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 
 [node name="SkyLayer" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_scale = Vector2(0.02, 0.02)
+motion_scale = Vector2(0.02, 0.0)
 motion_mirroring = Vector2(480, 0)
 
 [node name="Sprite" type="TextureRect" parent="ParallaxBackground/SkyLayer"]
 texture_filter = 1
+offset_top = 0.0
 offset_right = 480.0
 offset_bottom = 270.0
 texture = ExtResource("4_sky")
 
 [node name="StarsLayer" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_scale = Vector2(0.04, 0.04)
+motion_scale = Vector2(0.04, 0.0)
 motion_mirroring = Vector2(480, 0)
 
 [node name="Sprite" type="TextureRect" parent="ParallaxBackground/StarsLayer"]
 texture_filter = 1
+offset_top = 0.0
 offset_right = 480.0
 offset_bottom = 270.0
 texture = ExtResource("11_stars")
 
 [node name="CelestialLayer" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_scale = Vector2(0.02, 0.02)
+motion_scale = Vector2(0.02, 0.0)
 
 [node name="SunSprite" type="Sprite2D" parent="ParallaxBackground/CelestialLayer"]
 texture_filter = 1
-position = Vector2(240, 60)
+position = Vector2(240, 50)
 texture = ExtResource("9_sun")
 
 [node name="MoonSprite" type="Sprite2D" parent="ParallaxBackground/CelestialLayer"]
 texture_filter = 1
-position = Vector2(240, 200)
+position = Vector2(240, 50)
 texture = ExtResource("10_moon")
 
 [node name="CloudsLayer" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_scale = Vector2(0.12, 0.12)
+motion_scale = Vector2(0.12, 0.0)
 motion_mirroring = Vector2(960, 0)
 
 [node name="Sprite" type="TextureRect" parent="ParallaxBackground/CloudsLayer"]
 texture_filter = 1
-offset_top = 10.0
+offset_top = 0.0
 offset_right = 960.0
-offset_bottom = 190.0
+offset_bottom = 180.0
 texture = ExtResource("12_clouds")
 
 [node name="DistantLayer" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_scale = Vector2(0.28, 0.28)
+motion_scale = Vector2(0.25, 0.0)
 motion_mirroring = Vector2(480, 0)
 
 [node name="Sprite" type="TextureRect" parent="ParallaxBackground/DistantLayer"]
 texture_filter = 1
+offset_top = 0.0
 offset_right = 480.0
 offset_bottom = 270.0
 texture = ExtResource("5_distant")
 
 [node name="NearLayer" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_scale = Vector2(0.55, 0.55)
+motion_scale = Vector2(0.50, 0.0)
 motion_mirroring = Vector2(480, 0)
 
 [node name="Sprite" type="TextureRect" parent="ParallaxBackground/NearLayer"]
 texture_filter = 1
+offset_top = 0.0
 offset_right = 480.0
 offset_bottom = 270.0
 texture = ExtResource("6_near")
@@ -89,7 +93,7 @@ position = Vector2(80, 180)
 position_smoothing_enabled = true
 position_smoothing_speed = 9.0
 limit_left = 0
-limit_top = -60
+limit_top = 0
 limit_bottom = 270
 
 [node name="HUD" parent="." instance=ExtResource("3_hud")]

@@ -1,7 +1,7 @@
 [gd_scene load_steps=35 format=3]
 
 [ext_resource type="Script" path="res://Scripts/Player/player.gd" id="1_xpcdj"]
-[ext_resource type="Texture2D" path="res://Assets/Player/student_runner.png" id="2_student"]
+[ext_resource type="Texture2D" path="res://Assets/Player/runner_student_m_a.png" id="2_student"]
 [ext_resource type="AudioStream" path="res://Assets/Audio/jump.wav" id="3_jump"]
 [ext_resource type="AudioStream" path="res://Assets/Audio/land.wav" id="4_land"]
 [ext_resource type="AudioStream" path="res://Assets/Audio/hurt.wav" id="5_hurt"]

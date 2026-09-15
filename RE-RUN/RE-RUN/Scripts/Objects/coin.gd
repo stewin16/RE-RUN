@@ -7,6 +7,18 @@ signal collected
 
 var is_collected: bool = false
 
+func _ready() -> void:
+	area_entered.connect(_on_area_entered)
+	if sprite:
+		sprite.frame = randi() % 6
+
+func _on_area_entered(area: Area2D) -> void:
+	if is_collected:
+		return
+	var p = area.get_parent()
+	if p and (p.is_in_group("player") or p.name == "Player" or p.has_method("take_damage")):
+		_on_body_entered(p)
+
 func _process(delta: float) -> void:
 	if is_collected:
 		return

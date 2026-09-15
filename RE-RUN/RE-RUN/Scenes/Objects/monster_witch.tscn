@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://Scripts/Objects/monster_enemy.gd" id="1_mscript"]
+[ext_resource type="Texture2D" path="res://Assets/Enemies/Monsters/witch.png" id="2_wtex"]
+[ext_resource type="AudioStream" path="res://Assets/Audio/monster_groan.wav" id="3_msnd"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_witch"]
+size = Vector2(24, 28)
+
+[node name="MonsterWitch" type="Area2D" groups=["enemies"]]
+collision_layer = 4
+collision_mask = 2
+script = ExtResource("1_mscript")
+monster_type = "witch"
+is_flying = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0, -16)
+texture = ExtResource("2_wtex")
+region_enabled = true
+region_rect = Rect2(0, 0, 32, 32)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -14)
+shape = SubResource("RectangleShape2D_witch")
+
+[node name="GroanSFX" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_msnd")
+volume_db = -5.0
+pitch_scale = 1.6
+max_distance = 450.0

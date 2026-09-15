@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://Scripts/Objects/teacher_boss.gd" id="1_tbgd"]
-[ext_resource type="Texture2D" path="res://Assets/Characters/teacher_boss.png" id="2_tbtex"]
+[ext_resource type="Texture2D" path="res://Assets/KW_School_Characters/16x16 Character/Teacher_M_A.png" id="2_tbtex"]
 [ext_resource type="AudioStream" path="res://Assets/Audio/exam_attack.wav" id="3_atksfx"]
 [ext_resource type="AudioStream" path="res://Assets/Audio/enemy_hit.wav" id="4_hurtsfx"]
 
@@ -18,7 +18,7 @@ script = ExtResource("1_tbgd")
 texture_filter = 1
 texture = ExtResource("2_tbtex")
 region_enabled = true
-region_rect = Rect2(0, 0, 48, 48)
+region_rect = Rect2(0, 0, 16, 16)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_boss")

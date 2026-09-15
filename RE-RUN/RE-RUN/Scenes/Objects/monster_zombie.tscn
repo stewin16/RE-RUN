@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://Scripts/Objects/monster_enemy.gd" id="1_mscript"]
+[ext_resource type="Texture2D" path="res://Assets/Enemies/Monsters/zombie.png" id="2_ztex"]
+[ext_resource type="AudioStream" path="res://Assets/Audio/monster_groan.wav" id="3_msnd"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mon"]
+size = Vector2(20, 26)
+
+[node name="MonsterZombie" type="Area2D" groups=["enemies"]]
+collision_layer = 4
+collision_mask = 2
+script = ExtResource("1_mscript")
+monster_type = "zombie"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0, -16)
+texture = ExtResource("2_ztex")
+region_enabled = true
+region_rect = Rect2(0, 0, 32, 32)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -13)
+shape = SubResource("RectangleShape2D_mon")
+
+[node name="GroanSFX" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_msnd")
+volume_db = -6.0
+max_distance = 400.0

@@ -1,13 +1,14 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=14 format=3]
 
 [ext_resource type="Script" path="res://Scripts/UI/hud.gd" id="1_hudgd"]
-[ext_resource type="Texture2D" path="res://Assets/Items/coin.png" id="2_cointex"]
 [ext_resource type="AudioStream" path="res://Assets/Audio/click.wav" id="3_clicksfx"]
 [ext_resource type="AudioStream" path="res://Assets/Audio/highscore.wav" id="4_hssfx"]
 [ext_resource type="AudioStream" path="res://Assets/Audio/quiz_correct.wav" id="5_quizcorrect"]
 [ext_resource type="AudioStream" path="res://Assets/Audio/quiz_wrong.wav" id="6_quizwrong"]
 [ext_resource type="AudioStream" path="res://Assets/Audio/hint_used.wav" id="7_hintused"]
 [ext_resource type="AudioStream" path="res://Assets/Audio/fact_chime.wav" id="8_factchime"]
+[ext_resource type="Texture2D" path="res://Assets/UI/heart_full.png" id="9_heartfull"]
+[ext_resource type="Texture2D" path="res://Assets/UI/heart_empty.png" id="10_heartempty"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pixel_panel"]
 bg_color = Color(0.0941176, 0.0784314, 0.145098, 0.95)
@@ -33,6 +34,54 @@ border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.9, 0.25, 0.25, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pixel_btn"]
+bg_color = Color(0.14, 0.12, 0.22, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.35, 0.6, 0.95, 0.9)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_left = 2
+corner_radius_bottom_right = 2
+content_margin_left = 6.0
+content_margin_top = 4.0
+content_margin_right = 6.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pixel_btn_hover"]
+bg_color = Color(0.24, 0.2, 0.38, 0.98)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.96, 0.8, 0.2, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_left = 2
+corner_radius_bottom_right = 2
+content_margin_left = 6.0
+content_margin_top = 4.0
+content_margin_right = 6.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_circular_skill"]
+bg_color = Color(0.08, 0.07, 0.14, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.2, 0.95, 0.5, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_left = 4
+corner_radius_bottom_right = 4
+content_margin_left = 3.0
+content_margin_top = 3.0
+content_margin_right = 3.0
+content_margin_bottom = 3.0
+
 [node name="HUD" type="CanvasLayer"]
 process_mode = 3
 script = ExtResource("1_hudgd")
@@ -40,30 +89,26 @@ script = ExtResource("1_hudgd")
 [node name="TopLeft" type="MarginContainer" parent="."]
 offset_left = 12.0
 offset_top = 8.0
-offset_right = 110.0
-offset_bottom = 44.0
+offset_right = 220.0
+offset_bottom = 52.0
 
 [node name="ScoreVBox" type="VBoxContainer" parent="TopLeft"]
 layout_mode = 2
 theme_override_constants/separation = 1
 
-[node name="ScoreTitle" type="Label" parent="TopLeft/ScoreVBox"]
+[node name="ScoreRow" type="HBoxContainer" parent="TopLeft/ScoreVBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.7, 0.75, 0.85, 1)
-theme_override_colors/font_outline_color = Color(0.0941176, 0.0784314, 0.145098, 1)
-theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 9
-text = "SCORE"
+theme_override_constants/separation = 8
 
-[node name="ScoreVal" type="Label" parent="TopLeft/ScoreVBox"]
+[node name="ScoreVal" type="Label" parent="TopLeft/ScoreVBox/ScoreRow"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0.0941176, 0.0784314, 0.145098, 1)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 13
 text = "000000"
 
-[node name="BestVal" type="Label" parent="TopLeft/ScoreVBox"]
+[node name="BestVal" type="Label" parent="TopLeft/ScoreVBox/ScoreRow"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.960784, 0.619608, 0.0431373, 0.9)
 theme_override_colors/font_outline_color = Color(0.0941176, 0.0784314, 0.145098, 1)
@@ -71,19 +116,48 @@ theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 9
 text = "BEST: 000000"
 
-[node name="LifelinesVal" type="Label" parent="TopLeft/ScoreVBox"]
+[node name="HeartsHBox" type="HBoxContainer" parent="TopLeft/ScoreVBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.35, 0.45, 1)
-theme_override_colors/font_outline_color = Color(0.0941176, 0.0784314, 0.145098, 1)
-theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 10
-text = "♥ ♥ ♥"
+theme_override_constants/separation = 4
+
+[node name="Heart1" type="TextureRect" parent="TopLeft/ScoreVBox/HeartsHBox"]
+texture_filter = 1
+custom_minimum_size = Vector2(14, 14)
+layout_mode = 2
+texture = ExtResource("9_heartfull")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Heart2" type="TextureRect" parent="TopLeft/ScoreVBox/HeartsHBox"]
+texture_filter = 1
+custom_minimum_size = Vector2(14, 14)
+layout_mode = 2
+texture = ExtResource("9_heartfull")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Heart3" type="TextureRect" parent="TopLeft/ScoreVBox/HeartsHBox"]
+texture_filter = 1
+custom_minimum_size = Vector2(14, 14)
+layout_mode = 2
+texture = ExtResource("9_heartfull")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Heart4" type="TextureRect" parent="TopLeft/ScoreVBox/HeartsHBox"]
+visible = false
+texture_filter = 1
+custom_minimum_size = Vector2(14, 14)
+layout_mode = 2
+texture = ExtResource("10_heartempty")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="TopRight" type="MarginContainer" parent="."]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -196.0
+offset_left = -250.0
 offset_top = 8.0
 offset_right = -12.0
 offset_bottom = 36.0
@@ -91,42 +165,72 @@ grow_horizontal = 0
 
 [node name="CoinsHBox" type="HBoxContainer" parent="TopRight"]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 10
 alignment = 2
 
 [node name="KnowledgeVal" type="Label" parent="TopRight/CoinsHBox"]
 layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.95, 0.45, 0.75, 1)
-theme_override_font_sizes/font_size = 11
-text = "🧠 00"
-clip_text = true
+theme_override_colors/font_color = Color(0.3, 0.95, 1, 1)
+theme_override_colors/font_outline_color = Color(0.09, 0.08, 0.15, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 10
+text = "KNOW: 00"
 
 [node name="HintsVal" type="Label" parent="TopRight/CoinsHBox"]
 layout_mode = 2
-size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 0.9, 0.2, 1)
-theme_override_font_sizes/font_size = 11
-text = "💡 0"
-clip_text = true
+theme_override_colors/font_outline_color = Color(0.09, 0.08, 0.15, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 10
+text = "HINT: 0"
 
 [node name="CoinIcon" type="TextureRect" parent="TopRight/CoinsHBox"]
 texture_filter = 1
-custom_minimum_size = Vector2(16, 16)
+custom_minimum_size = Vector2(12, 12)
 layout_mode = 2
-size_flags_vertical = 4
-texture = ExtResource("2_cointex")
 expand_mode = 1
-stretch_mode = 3
+stretch_mode = 5
 
 [node name="CoinsVal" type="Label" parent="TopRight/CoinsHBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.980392, 0.8, 0.0823529, 1)
-theme_override_colors/font_outline_color = Color(0.0941176, 0.0784314, 0.145098, 1)
+theme_override_colors/font_color = Color(1.0, 0.85, 0.2, 1)
+theme_override_colors/font_outline_color = Color(0.09, 0.08, 0.15, 1)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 15
-text = "● 000"
-clip_text = true
+theme_override_font_sizes/font_size = 10
+text = "0"
+
+[node name="BottomRight" type="MarginContainer" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -64.0
+offset_top = -64.0
+offset_right = -12.0
+offset_bottom = -12.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="SkillBtn" type="Button" parent="BottomRight"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_circular_skill")
+theme_override_styles/hover = SubResource("StyleBoxFlat_circular_skill")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_circular_skill")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_circular_skill")
+
+[node name="Icon" type="TextureRect" parent="BottomRight/SkillBtn"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 5
 
 [node name="CenterOverlay" type="Control" parent="."]
 layout_mode = 3
@@ -168,19 +272,678 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -80.0
+offset_left = -120.0
 offset_top = -60.0
-offset_right = 80.0
+offset_right = 120.0
 offset_bottom = -36.0
 grow_horizontal = 2
 grow_vertical = 2
-pivot_offset = Vector2(80, 12)
+pivot_offset = Vector2(120, 12)
 theme_override_colors/font_color = Color(0.2, 0.8, 1.0, 1)
 theme_override_colors/font_outline_color = Color(0.0941176, 0.0784314, 0.145098, 1)
 theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 16
 text = "SPEED UP!"
 horizontal_alignment = 1
+
+[node name="PowerUpBadge" type="Panel" parent="."]
+visible = false
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -110.0
+offset_top = 50.0
+offset_right = 110.0
+offset_bottom = 68.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_powerup")
+
+[node name="Label" type="Label" parent="PowerUpBadge"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.2, 0.9, 1, 1)
+theme_override_colors/font_outline_color = Color(0.09, 0.08, 0.15, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 7
+text = "PWR 2X + MAGNET"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+
+[node name="BossBarPanel" type="Panel" parent="."]
+visible = false
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_top = 8.0
+offset_right = 200.0
+offset_bottom = 56.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_boss")
+
+[node name="MainHBox" type="HBoxContainer" parent="BossBarPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 4.0
+offset_right = -8.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 8
+
+[node name="BossFaceRect" type="TextureRect" parent="BossBarPanel/MainHBox"]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+texture_filter = 1
+
+[node name="VBox" type="VBoxContainer" parent="BossBarPanel/MainHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+[node name="BossTitle" type="Label" parent="BossBarPanel/MainHBox/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.62, 0.04, 1)
+theme_override_colors/font_outline_color = Color(0.09, 0.08, 0.15, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 9
+text = "PROF. BOSS - LEVEL 1"
+
+[node name="StatusHBox" type="HBoxContainer" parent="BossBarPanel/MainHBox/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="BossHP" type="Label" parent="BossBarPanel/MainHBox/VBox/StatusHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 0.35, 0.35, 1)
+theme_override_colors/font_outline_color = Color(0.09, 0.08, 0.15, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 8
+text = "HP: [X X X X X]"
+
+[node name="ExamProgress" type="Label" parent="BossBarPanel/MainHBox/VBox/StatusHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.9, 0.5, 1)
+theme_override_colors/font_outline_color = Color(0.09, 0.08, 0.15, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 8
+text = "EXAM: 1/5"
+
+[node name="FactToast" type="Panel" parent="."]
+visible = false
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -170.0
+offset_top = 6.0
+offset_right = 170.0
+offset_bottom = 46.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pixel_panel")
+
+[node name="VBox" type="VBoxContainer" parent="FactToast"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 4.0
+offset_right = -8.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 3
+alignment = 1
+
+[node name="FactTitle" type="Label" parent="FactToast/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 0.95, 1, 1)
+theme_override_colors/font_outline_color = Color(0.09, 0.08, 0.15, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 8
+text = "KNOWLEDGE +10"
+horizontal_alignment = 1
+
+[node name="FactContent" type="Label" parent="FactToast/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_colors/font_outline_color = Color(0.09, 0.08, 0.15, 1)
+theme_override_constants/outline_size = 1
+theme_override_font_sizes/font_size = 7
+text = "FACT: ..."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="TechQuizModal" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Darken" type="ColorRect" parent="TechQuizModal"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.78)
+
+[node name="Panel" type="Panel" parent="TechQuizModal"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -190.0
+offset_top = -115.0
+offset_right = 190.0
+offset_bottom = 115.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pixel_panel")
+
+[node name="VBox" type="VBoxContainer" parent="TechQuizModal/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 8.0
+offset_right = -12.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="HeaderHBox" type="HBoxContainer" parent="TechQuizModal/Panel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Title" type="Label" parent="TechQuizModal/Panel/VBox/HeaderHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.96, 0.62, 0.04, 1)
+theme_override_colors/font_outline_color = Color(0.09, 0.08, 0.15, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 9
+text = "KNOWLEDGE CHECK"
+
+[node name="QuizHeartsHBox" type="HBoxContainer" parent="TechQuizModal/Panel/VBox/HeaderHBox"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="QHeart1" type="TextureRect" parent="TechQuizModal/Panel/VBox/HeaderHBox/QuizHeartsHBox"]
+texture_filter = 1
+custom_minimum_size = Vector2(12, 12)
+layout_mode = 2
+texture = ExtResource("9_heartfull")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="QHeart2" type="TextureRect" parent="TechQuizModal/Panel/VBox/HeaderHBox/QuizHeartsHBox"]
+texture_filter = 1
+custom_minimum_size = Vector2(12, 12)
+layout_mode = 2
+texture = ExtResource("9_heartfull")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="QHeart3" type="TextureRect" parent="TechQuizModal/Panel/VBox/HeaderHBox/QuizHeartsHBox"]
+texture_filter = 1
+custom_minimum_size = Vector2(12, 12)
+layout_mode = 2
+texture = ExtResource("9_heartfull")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="QHeart4" type="TextureRect" parent="TechQuizModal/Panel/VBox/HeaderHBox/QuizHeartsHBox"]
+visible = false
+texture_filter = 1
+custom_minimum_size = Vector2(12, 12)
+layout_mode = 2
+texture = ExtResource("10_heartempty")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="QuestionLabel" type="Label" parent="TechQuizModal/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_colors/font_outline_color = Color(0.09, 0.08, 0.15, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 8
+text = "QUESTION GOES HERE"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="OptionsVBox" type="VBoxContainer" parent="TechQuizModal/Panel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Opt1" type="Button" parent="TechQuizModal/Panel/VBox/OptionsVBox"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_pixel_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_pixel_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_pixel_btn_hover")
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 7
+text = "A. Option 1"
+
+[node name="Opt2" type="Button" parent="TechQuizModal/Panel/VBox/OptionsVBox"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_pixel_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_pixel_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_pixel_btn_hover")
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 7
+text = "B. Option 2"
+
+[node name="Opt3" type="Button" parent="TechQuizModal/Panel/VBox/OptionsVBox"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_pixel_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_pixel_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_pixel_btn_hover")
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 7
+text = "C. Option 3"
+
+[node name="Opt4" type="Button" parent="TechQuizModal/Panel/VBox/OptionsVBox"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_pixel_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_pixel_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_pixel_btn_hover")
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 7
+text = "D. Option 4"
+
+[node name="FooterHBox" type="HBoxContainer" parent="TechQuizModal/Panel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="HintBtn" type="Button" parent="TechQuizModal/Panel/VBox/FooterHBox"]
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_pixel_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_pixel_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_pixel_btn_hover")
+theme_override_colors/font_color = Color(1, 0.9, 0.2, 1)
+theme_override_font_sizes/font_size = 7
+text = "HINT: USE 50:50 (0 LEFT)"
+
+[node name="RewardHint" type="Label" parent="TechQuizModal/Panel/VBox/FooterHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.9, 0.5, 1)
+theme_override_colors/font_outline_color = Color(0.09, 0.08, 0.15, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 7
+text = "REWARD: 2X + SHIELD"
+
+[node name="BossIntroModal" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Darken" type="ColorRect" parent="BossIntroModal"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.75)
+
+[node name="Panel" type="Panel" parent="BossIntroModal"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -170.0
+offset_top = -100.0
+offset_right = 170.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_boss")
+
+[node name="VBox" type="VBoxContainer" parent="BossIntroModal/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 14.0
+offset_top = 10.0
+offset_right = -14.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="Title" type="Label" parent="BossIntroModal/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.62, 0.04, 1)
+theme_override_colors/font_outline_color = Color(0.09, 0.08, 0.15, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 10
+text = "LEVEL 1 FINAL EXAM"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="RuleLabel" type="Label" parent="BossIntroModal/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1.0, 1)
+theme_override_colors/font_outline_color = Color(0.09, 0.08, 0.15, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 8
+text = "Answer AT LEAST 3 OUT OF 5 questions correctly to pass!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="StartExamBtn" type="Button" parent="BossIntroModal/Panel/VBox"]
+custom_minimum_size = Vector2(200, 26)
+layout_mode = 2
+size_flags_horizontal = 4
+focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_pixel_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_pixel_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_pixel_btn_hover")
+theme_override_colors/font_color = Color(1, 0.9, 0.2, 1)
+theme_override_font_sizes/font_size = 8
+text = "START FINAL EXAM"
+
+[node name="ChaseWarningModal" type="Control" parent="."]
+process_mode = 3
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Darken" type="ColorRect" parent="ChaseWarningModal"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.75)
+
+[node name="Panel" type="Panel" parent="ChaseWarningModal"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -170.0
+offset_top = -100.0
+offset_right = 170.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_boss")
+
+[node name="VBox" type="VBoxContainer" parent="ChaseWarningModal/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 14.0
+offset_top = 10.0
+offset_right = -14.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="Title" type="Label" parent="ChaseWarningModal/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.62, 0.04, 1)
+theme_override_colors/font_outline_color = Color(0.09, 0.08, 0.15, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 10
+text = "CAMPUS PURSUIT ALERT"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="RuleLabel" type="Label" parent="ChaseWarningModal/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1.0, 1)
+theme_override_colors/font_outline_color = Color(0.09, 0.08, 0.15, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 8
+text = "\"YOU'RE LATE!\"\n\nHEAD JANITOR IS IN PURSUIT!\nSprint forward, dodge obstacles, and outrun the chase!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="ContinueBtn" type="Button" parent="ChaseWarningModal/Panel/VBox"]
+custom_minimum_size = Vector2(200, 26)
+layout_mode = 2
+size_flags_horizontal = 4
+focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_pixel_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_pixel_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_pixel_btn_hover")
+theme_override_colors/font_color = Color(1, 0.9, 0.2, 1)
+theme_override_font_sizes/font_size = 8
+text = "RUN! (CLICK / SPACE)"
+
+[node name="FactModal" type="Control" parent="."]
+process_mode = 3
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Darken" type="ColorRect" parent="FactModal"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.75)
+
+[node name="Panel" type="Panel" parent="FactModal"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -170.0
+offset_top = -100.0
+offset_right = 170.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_boss")
+
+[node name="VBox" type="VBoxContainer" parent="FactModal/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 14.0
+offset_top = 10.0
+offset_right = -14.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="Title" type="Label" parent="FactModal/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.62, 0.04, 1)
+theme_override_colors/font_outline_color = Color(0.09, 0.08, 0.15, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 10
+text = "KNOWLEDGE ACQUIRED!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="RuleLabel" type="Label" parent="FactModal/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1.0, 1)
+theme_override_colors/font_outline_color = Color(0.09, 0.08, 0.15, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 8
+text = "\"Ada Lovelace wrote the world's first computer algorithm in 1843!\"\n\nREWARD: +10 KNOWLEDGE & 2X SCORE\n(Remember this fact for your Final Exam!)"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="ContinueBtn" type="Button" parent="FactModal/Panel/VBox"]
+custom_minimum_size = Vector2(200, 26)
+layout_mode = 2
+size_flags_horizontal = 4
+focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_pixel_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_pixel_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_pixel_btn_hover")
+theme_override_colors/font_color = Color(1, 0.9, 0.2, 1)
+theme_override_font_sizes/font_size = 8
+text = "CONTINUE (CLICK / SPACE)"
+
+[node name="WinMenu" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Darken" type="ColorRect" parent="WinMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.75)
+
+[node name="Panel" type="Panel" parent="WinMenu"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -100.0
+offset_right = 160.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pixel_panel")
+
+[node name="VBox" type="VBoxContainer" parent="WinMenu/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 14.0
+offset_top = 10.0
+offset_right = -14.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="Title" type="Label" parent="WinMenu/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.95, 0.4, 1)
+theme_override_colors/font_outline_color = Color(0.09, 0.08, 0.15, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 10
+text = "LEVEL CLEARED!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Subtitle" type="Label" parent="WinMenu/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_colors/font_outline_color = Color(0.09, 0.08, 0.15, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 8
+text = "EXAM PASSED! ADVANCING!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="StatsLabel" type="Label" parent="WinMenu/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.62, 0.04, 1)
+theme_override_colors/font_outline_color = Color(0.09, 0.08, 0.15, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 8
+text = "Score: 000000 | Exam: 0/5"
+horizontal_alignment = 1
+
+[node name="ButtonContainer" type="HBoxContainer" parent="WinMenu/Panel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="NextLevelBtn" type="Button" parent="WinMenu/Panel/VBox/ButtonContainer"]
+custom_minimum_size = Vector2(140, 24)
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_pixel_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_pixel_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_pixel_btn_hover")
+theme_override_colors/font_color = Color(1, 0.9, 0.2, 1)
+theme_override_font_sizes/font_size = 8
+text = "NEXT LEVEL"
+
+[node name="MenuBtn" type="Button" parent="WinMenu/Panel/VBox/ButtonContainer"]
+custom_minimum_size = Vector2(80, 24)
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_pixel_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_pixel_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_pixel_btn_hover")
+theme_override_font_sizes/font_size = 8
+text = "MENU"
 
 [node name="PauseMenu" type="Control" parent="."]
 visible = false
@@ -198,7 +961,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0.45)
+color = Color(0, 0, 0, 0.7)
 
 [node name="Panel" type="Panel" parent="PauseMenu"]
 layout_mode = 1
@@ -207,10 +970,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -90.0
-offset_top = -70.0
-offset_right = 90.0
-offset_bottom = 70.0
+offset_left = -110.0
+offset_top = -80.0
+offset_right = 110.0
+offset_bottom = 80.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_pixel_panel")
@@ -221,9 +984,9 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 16.0
-offset_top = 10.0
+offset_top = 12.0
 offset_right = -16.0
-offset_bottom = -10.0
+offset_bottom = -12.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 6
@@ -233,27 +996,39 @@ alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0.960784, 0.619608, 0.0431373, 1)
 theme_override_colors/font_outline_color = Color(0.0941176, 0.0784314, 0.145098, 1)
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 18
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 12
 text = "PAUSED"
 horizontal_alignment = 1
 
 [node name="ResumeBtn" type="Button" parent="PauseMenu/Panel/VBox"]
+custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 focus_mode = 0
-theme_override_font_sizes/font_size = 11
+theme_override_styles/normal = SubResource("StyleBoxFlat_pixel_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_pixel_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_pixel_btn_hover")
+theme_override_font_sizes/font_size = 8
 text = "RESUME"
 
 [node name="RestartBtn" type="Button" parent="PauseMenu/Panel/VBox"]
+custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 focus_mode = 0
-theme_override_font_sizes/font_size = 11
+theme_override_styles/normal = SubResource("StyleBoxFlat_pixel_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_pixel_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_pixel_btn_hover")
+theme_override_font_sizes/font_size = 8
 text = "RESTART"
 
 [node name="MenuBtn" type="Button" parent="PauseMenu/Panel/VBox"]
+custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 focus_mode = 0
-theme_override_font_sizes/font_size = 11
+theme_override_styles/normal = SubResource("StyleBoxFlat_pixel_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_pixel_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_pixel_btn_hover")
+theme_override_font_sizes/font_size = 8
 text = "MAIN MENU"
 
 [node name="GameOverMenu" type="Control" parent="."]
@@ -272,7 +1047,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.08, 0.04, 0.06, 0.65)
+color = Color(0, 0, 0, 0.8)
 
 [node name="Panel" type="Panel" parent="GameOverMenu"]
 layout_mode = 1
@@ -281,10 +1056,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -160.0
-offset_top = -105.0
-offset_right = 160.0
-offset_bottom = 105.0
+offset_left = -120.0
+offset_top = -90.0
+offset_right = 120.0
+offset_bottom = 90.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_pixel_panel")
@@ -320,7 +1095,7 @@ theme_override_colors/font_color = Color(0.98, 0.8, 0.08, 1)
 theme_override_colors/font_outline_color = Color(0.0941176, 0.0784314, 0.145098, 1)
 theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 8
-text = "★ NEW BEST! ★"
+text = "NEW BEST!"
 horizontal_alignment = 1
 
 [node name="ScoreContainer" type="VBoxContainer" parent="GameOverMenu/Panel/VBox"]
@@ -342,21 +1117,6 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 9
 text = "000000"
 
-[node name="CoinsRow" type="HBoxContainer" parent="GameOverMenu/Panel/VBox/ScoreContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="GameOverMenu/Panel/VBox/ScoreContainer/CoinsRow"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 9
-text = "COINS:"
-
-[node name="CoinsNum" type="Label" parent="GameOverMenu/Panel/VBox/ScoreContainer/CoinsRow"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.98, 0.8, 0.08, 1)
-theme_override_font_sizes/font_size = 9
-text = "0"
-
 [node name="BestRow" type="HBoxContainer" parent="GameOverMenu/Panel/VBox/ScoreContainer"]
 layout_mode = 2
 
@@ -372,9 +1132,28 @@ theme_override_colors/font_color = Color(0.960784, 0.619608, 0.0431373, 1)
 theme_override_font_sizes/font_size = 9
 text = "000000"
 
+[node name="CoinsRow" type="HBoxContainer" parent="GameOverMenu/Panel/VBox/ScoreContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="GameOverMenu/Panel/VBox/ScoreContainer/CoinsRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 9
+text = "COINS:"
+
+[node name="CoinsNum" type="Label" parent="GameOverMenu/Panel/VBox/ScoreContainer/CoinsRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1.0, 0.85, 0.2, 1)
+theme_override_font_sizes/font_size = 9
+text = "0"
+
 [node name="ReviveBtn" type="Button" parent="GameOverMenu/Panel/VBox"]
+custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_pixel_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_pixel_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_pixel_btn_hover")
 theme_override_colors/font_color = Color(1, 0.9, 0.2, 1)
 theme_override_font_sizes/font_size = 8
 text = "REVIVE (50 COINS)"
@@ -385,373 +1164,25 @@ theme_override_constants/separation = 8
 alignment = 1
 
 [node name="RetryBtn" type="Button" parent="GameOverMenu/Panel/VBox/ButtonContainer"]
+custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_pixel_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_pixel_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_pixel_btn_hover")
 theme_override_font_sizes/font_size = 8
 text = "RESTART"
 
 [node name="MenuBtn" type="Button" parent="GameOverMenu/Panel/VBox/ButtonContainer"]
+custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_pixel_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_pixel_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_pixel_btn_hover")
 theme_override_font_sizes/font_size = 8
-text = "MENU"
-
-[node name="PowerUpBadge" type="Panel" parent="."]
-visible = false
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -96.0
-offset_top = 8.0
-offset_right = 96.0
-offset_bottom = 26.0
-grow_horizontal = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_powerup")
-
-[node name="Label" type="Label" parent="PowerUpBadge"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_color = Color(0.2, 0.9, 1, 1)
-theme_override_colors/font_outline_color = Color(0.09, 0.08, 0.15, 1)
-theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 9
-text = "⚡ 2X + MAGNET: 10.0s"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="BossBarPanel" type="Panel" parent="."]
-visible = false
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -190.0
-offset_top = 34.0
-offset_right = 190.0
-offset_bottom = 76.0
-grow_horizontal = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_boss")
-
-[node name="MainHBox" type="HBoxContainer" parent="BossBarPanel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 6.0
-offset_top = 4.0
-offset_right = -6.0
-offset_bottom = -4.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/separation = 8
-alignment = 1
-
-[node name="BossFaceRect" type="TextureRect" parent="BossBarPanel/MainHBox"]
-texture_filter = 1
-custom_minimum_size = Vector2(34, 34)
-layout_mode = 2
-size_flags_vertical = 4
-expand_mode = 1
-stretch_mode = 5
-
-[node name="VBox" type="VBoxContainer" parent="BossBarPanel/MainHBox"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 2
-alignment = 1
-
-[node name="BossTitle" type="Label" parent="BossBarPanel/MainHBox/VBox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.4, 0.4, 1)
-theme_override_colors/font_outline_color = Color(0.1, 0.05, 0.1, 1)
-theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 8
-text = "PROF. STERLING — FINAL EXAM"
-autowrap_mode = 2
-clip_text = true
-
-[node name="StatusHBox" type="HBoxContainer" parent="BossBarPanel/MainHBox/VBox"]
-layout_mode = 2
-alignment = 1
-
-[node name="BossHP" type="Label" parent="BossBarPanel/MainHBox/VBox/StatusHBox"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(1, 0.8, 0.2, 1)
-theme_override_font_sizes/font_size = 8
-text = "HP: [■ ■ ■ ■ ■]"
-
-[node name="ExamProgress" type="Label" parent="BossBarPanel/MainHBox/VBox/StatusHBox"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.3, 0.9, 1, 1)
-theme_override_font_sizes/font_size = 8
-text = "EXAM: 1/5 (3/5 TO PASS)"
-clip_text = true
-
-[node name="FactToast" type="Panel" parent="."]
-visible = false
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -170.0
-offset_top = 48.0
-offset_right = 170.0
-offset_bottom = 110.0
-grow_horizontal = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_powerup")
-
-[node name="VBox" type="VBoxContainer" parent="FactToast"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 10.0
-offset_top = 6.0
-offset_right = -10.0
-offset_bottom = -6.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/separation = 3
-alignment = 1
-
-[node name="FactTitle" type="Label" parent="FactToast/VBox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
-theme_override_font_sizes/font_size = 10
-text = "🧠 KNOWLEDGE +10"
-horizontal_alignment = 1
-
-[node name="FactContent" type="Label" parent="FactToast/VBox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
-theme_override_font_sizes/font_size = 8
-text = "💡 Did you know? Honey never spoils."
-horizontal_alignment = 1
-autowrap_mode = 2
-clip_text = true
-
-[node name="TechQuizModal" type="Control" parent="."]
-visible = false
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="DarkOverlay" type="ColorRect" parent="TechQuizModal"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.04, 0.06, 0.10, 0.35)
-
-[node name="Panel" type="Panel" parent="TechQuizModal"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -190.0
-offset_top = -100.0
-offset_right = 190.0
-offset_bottom = 100.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_pixel_panel")
-
-[node name="VBox" type="VBoxContainer" parent="TechQuizModal/Panel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 12.0
-offset_top = 8.0
-offset_right = -12.0
-offset_bottom = -8.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/separation = 4
-alignment = 1
-
-[node name="HeaderHBox" type="HBoxContainer" parent="TechQuizModal/Panel/VBox"]
-layout_mode = 2
-
-[node name="Title" type="Label" parent="TechQuizModal/Panel/VBox/HeaderHBox"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.2, 0.9, 1, 1)
-theme_override_font_sizes/font_size = 9
-text = "★ KNOWLEDGE CHECK ★"
-
-[node name="QuizLifelines" type="Label" parent="TechQuizModal/Panel/VBox/HeaderHBox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.35, 0.45, 1)
-theme_override_font_sizes/font_size = 9
-text = "♥ ♥ ♥"
-
-[node name="QuestionLabel" type="Label" parent="TechQuizModal/Panel/VBox"]
-custom_minimum_size = Vector2(0, 40)
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 8
-text = "Question text here..."
-horizontal_alignment = 1
-autowrap_mode = 2
-clip_text = true
-
-[node name="OptionsVBox" type="VBoxContainer" parent="TechQuizModal/Panel/VBox"]
-layout_mode = 2
-theme_override_constants/separation = 3
-
-[node name="Opt1" type="Button" parent="TechQuizModal/Panel/VBox/OptionsVBox"]
-layout_mode = 2
-custom_minimum_size = Vector2(0, 18)
-focus_mode = 0
-theme_override_font_sizes/font_size = 8
-text = "A. Option 1"
-clip_text = true
-
-[node name="Opt2" type="Button" parent="TechQuizModal/Panel/VBox/OptionsVBox"]
-layout_mode = 2
-custom_minimum_size = Vector2(0, 18)
-focus_mode = 0
-theme_override_font_sizes/font_size = 8
-text = "B. Option 2"
-clip_text = true
-
-[node name="Opt3" type="Button" parent="TechQuizModal/Panel/VBox/OptionsVBox"]
-layout_mode = 2
-custom_minimum_size = Vector2(0, 18)
-focus_mode = 0
-theme_override_font_sizes/font_size = 8
-text = "C. Option 3"
-clip_text = true
-
-[node name="Opt4" type="Button" parent="TechQuizModal/Panel/VBox/OptionsVBox"]
-layout_mode = 2
-custom_minimum_size = Vector2(0, 18)
-focus_mode = 0
-theme_override_font_sizes/font_size = 8
-text = "D. Option 4"
-clip_text = true
-
-[node name="FooterHBox" type="HBoxContainer" parent="TechQuizModal/Panel/VBox"]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="HintBtn" type="Button" parent="TechQuizModal/Panel/VBox/FooterHBox"]
-layout_mode = 2
-size_flags_horizontal = 3
-focus_mode = 0
-theme_override_colors/font_color = Color(1, 0.9, 0.2, 1)
-theme_override_font_sizes/font_size = 8
-text = "💡 USE HINT"
-
-[node name="RewardHint" type="Label" parent="TechQuizModal/Panel/VBox/FooterHBox"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.98, 0.8, 0.08, 0.9)
-theme_override_font_sizes/font_size = 8
-text = "REWARD: 2X + SHIELD"
-horizontal_alignment = 2
-
-[node name="WinMenu" type="Control" parent="."]
-visible = false
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Darken" type="ColorRect" parent="WinMenu"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.04, 0.08, 0.14, 0.75)
-
-[node name="Panel" type="Panel" parent="WinMenu"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -120.0
-offset_top = -90.0
-offset_right = 120.0
-offset_bottom = 90.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_pixel_panel")
-
-[node name="VBox" type="VBoxContainer" parent="WinMenu/Panel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 14.0
-offset_top = 10.0
-offset_right = -14.0
-offset_bottom = -10.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/separation = 6
-alignment = 1
-
-[node name="Title" type="Label" parent="WinMenu/Panel/VBox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.2, 0.95, 0.5, 1)
-theme_override_colors/font_outline_color = Color(0.0941176, 0.0784314, 0.145098, 1)
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 18
-text = "🏆 LEVEL PASSED! 🏆"
-horizontal_alignment = 1
-
-[node name="Subtitle" type="Label" parent="WinMenu/Panel/VBox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
-theme_override_font_sizes/font_size = 10
-text = "FINAL EXAM CLEARED! GRADE: A+"
-horizontal_alignment = 1
-
-[node name="StatsLabel" type="Label" parent="WinMenu/Panel/VBox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.85, 0.9, 1, 1)
-theme_override_font_sizes/font_size = 9
-text = "Score: 000000 | Coins: 00"
-horizontal_alignment = 1
-
-[node name="ButtonContainer" type="HBoxContainer" parent="WinMenu/Panel/VBox"]
-layout_mode = 2
-theme_override_constants/separation = 8
-alignment = 1
-
-[node name="NextLevelBtn" type="Button" parent="WinMenu/Panel/VBox/ButtonContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-focus_mode = 0
-theme_override_font_sizes/font_size = 11
-text = "NEXT LEVEL"
-
-[node name="MenuBtn" type="Button" parent="WinMenu/Panel/VBox/ButtonContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-focus_mode = 0
-theme_override_font_sizes/font_size = 11
 text = "MENU"
 
 [node name="ClickSFX" type="AudioStreamPlayer" parent="."]
@@ -771,17 +1202,3 @@ stream = ExtResource("7_hintused")
 
 [node name="FactChimeSFX" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("8_factchime")
-
-[connection signal="pressed" from="PauseMenu/Panel/VBox/ResumeBtn" to="." method="_on_resume_pressed"]
-[connection signal="pressed" from="PauseMenu/Panel/VBox/RestartBtn" to="." method="_on_retry_pressed"]
-[connection signal="pressed" from="PauseMenu/Panel/VBox/MenuBtn" to="." method="_on_menu_pressed"]
-[connection signal="pressed" from="GameOverMenu/Panel/VBox/ReviveBtn" to="." method="_on_revive_pressed"]
-[connection signal="pressed" from="GameOverMenu/Panel/VBox/ButtonContainer/RetryBtn" to="." method="_on_retry_pressed"]
-[connection signal="pressed" from="GameOverMenu/Panel/VBox/ButtonContainer/MenuBtn" to="." method="_on_menu_pressed"]
-[connection signal="pressed" from="TechQuizModal/Panel/VBox/OptionsVBox/Opt1" to="." method="_on_quiz_opt1_pressed"]
-[connection signal="pressed" from="TechQuizModal/Panel/VBox/OptionsVBox/Opt2" to="." method="_on_quiz_opt2_pressed"]
-[connection signal="pressed" from="TechQuizModal/Panel/VBox/OptionsVBox/Opt3" to="." method="_on_quiz_opt3_pressed"]
-[connection signal="pressed" from="TechQuizModal/Panel/VBox/OptionsVBox/Opt4" to="." method="_on_quiz_opt4_pressed"]
-[connection signal="pressed" from="TechQuizModal/Panel/VBox/FooterHBox/HintBtn" to="." method="_on_hint_pressed"]
-[connection signal="pressed" from="WinMenu/Panel/VBox/ButtonContainer/NextLevelBtn" to="." method="_on_next_level_pressed"]
-[connection signal="pressed" from="WinMenu/Panel/VBox/ButtonContainer/MenuBtn" to="." method="_on_menu_pressed"]

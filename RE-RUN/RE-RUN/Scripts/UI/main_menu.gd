@@ -16,7 +16,7 @@ extends Control
 @onready var quit_btn: Button = $MenuContainer/VBox/Buttons/QuitBtn
 
 @onready var char_panel: Panel = get_node_or_null("CharPanel")
-@onready var char_face_rect: TextureRect = get_node_or_null("CharPanel/VBox/CarouselHBox/ProfileCard/CardContent/FaceRect")
+@onready var char_face_rect: TextureRect = get_node_or_null("CharPanel/VBox/CarouselHBox/ProfileCard/CardContent/FaceFrame/FaceRect") if get_node_or_null("CharPanel/VBox/CarouselHBox/ProfileCard/CardContent/FaceFrame/FaceRect") else get_node_or_null("CharPanel/VBox/CarouselHBox/ProfileCard/CardContent/FaceRect")
 @onready var char_name_label: Label = get_node_or_null("CharPanel/VBox/CarouselHBox/ProfileCard/CardContent/InfoVBox/NameLabel")
 @onready var char_major_label: Label = get_node_or_null("CharPanel/VBox/CarouselHBox/ProfileCard/CardContent/InfoVBox/MajorLabel")
 @onready var char_desc_label: Label = get_node_or_null("CharPanel/VBox/CarouselHBox/ProfileCard/CardContent/InfoVBox/DescLabel")
@@ -31,6 +31,35 @@ extends Control
 @onready var music_toggle: CheckButton = $SettingsPanel/VBox/MusicRow/MusicToggle
 @onready var sfx_toggle: CheckButton = $SettingsPanel/VBox/SFXRow/SFXToggle
 @onready var fs_toggle: CheckButton = $SettingsPanel/VBox/FSRow/FSToggle
+
+@onready var intro_title: Label = get_node_or_null("HowToPanel/VBox/Title")
+@onready var intro_subtitle: Label = get_node_or_null("HowToPanel/VBox/Subtitle")
+@onready var intro_instr: Label = get_node_or_null("HowToPanel/VBox/Instr")
+@onready var intro_page_label: Label = get_node_or_null("HowToPanel/VBox/NavHBox/PageLabel")
+
+var current_slide_idx: int = 0
+var INTRO_SLIDES = [
+	{
+		"title": "CAMPUS CHASE: THE LORE",
+		"subtitle": "WHY THE JANITOR IS AFTER YOU!",
+		"text": "It is 2:00 AM during Finals Week!\n\nYou accidentally spilled a double-shot iced espresso straight into the IT lab mainframe computer while finishing your thesis!\n\nNow Campus Security & the Head Janitor are in hot pursuit! Sprint through campus, dodge hazards, and survive!"
+	},
+	{
+		"title": "MOVEMENT & DODGING",
+		"subtitle": "MASTER YOUR RUNNER CONTROLS",
+		"text": "• [A] / [D] or [LEFT] / [RIGHT]: Move & Dodge obstacles\n• [SPACE] / [W] or [UP]: Jump!\n   -> Press TWICE in mid-air to DOUBLE JUMP!\n• [S] / [DOWN]: Slide under overhead pipes & barriers\n• [J] / [Z] / Left-Click: Energy Slash flying hazards!"
+	},
+	{
+		"title": "UNIQUE MAJOR SKILLS",
+		"subtitle": "SPECIAL PERKS & POWER-UPS",
+		"text": "• Press [S] or Tap Circular Skill Button (Bottom Right) to trigger your Student Major Perk:\n   - Leo (Algo): +10% Sprint Speed\n   - Kai (Cyber): Free Cyber Shield\n   - Ren (Physics): Low-Gravity Jump\n   - Sayaka (DB): Free Exam Hints\n   - Erika (Cybernetics): +1 Extra Life\n• Collect Brain Tokens (+50 Score) & Hint Tokens!"
+	},
+	{
+		"title": "PROFESSOR EXAM BOSS",
+		"subtitle": "MIDTERM SHOWDOWN AT THE END!",
+		"text": "Reach the end of each campus block to face the Professor Midterm Exam!\n\n• Answer 5 fast-paced questions matching your major curriculum!\n• Get 3/5+ correct to PASS and advance to the next level!\n• Collect Memory Shards on track to reveal exam answers!"
+	}
+]
 
 var ROSTER_KEYS = GameSettings.STUDENT_KEYS
 var current_roster_idx: int = 0
@@ -50,6 +79,13 @@ func _ready() -> void:
 
 	update_character_ui()
 
+	# Recursively apply pixel font to menu controls
+	var pixel_font: Font = load("res://Assets/Fonts/PressStart2P.ttf")
+	if not pixel_font:
+		pixel_font = load("res://Assets/Fonts/ArcadeClassic.ttf")
+	if pixel_font:
+		apply_pixel_font_recursive(self, pixel_font)
+
 	# Button entrance animations
 	var btns = [start_btn, char_btn, howto_btn, settings_btn, quit_btn]
 	for idx in range(btns.size()):
@@ -59,6 +95,14 @@ func _ready() -> void:
 			var tween := create_tween()
 			tween.tween_interval(0.08 * idx)
 			tween.tween_property(b, "modulate:a", 1.0, 0.15)
+
+func apply_pixel_font_recursive(node: Node, font: Font) -> void:
+	if node is Label:
+		node.add_theme_font_override("font", font)
+	elif node is Button:
+		node.add_theme_font_override("font", font)
+	for child in node.get_children():
+		apply_pixel_font_recursive(child, font)
 
 func _process(delta: float) -> void:
 	scroll_pos += 140.0 * delta
@@ -112,12 +156,26 @@ func update_character_ui() -> void:
 		char_name_label.text = char_info.get("name", "").to_upper()
 	if char_major_label:
 		char_major_label.text = char_info.get("major", "")
-	if char_desc_label:
-		char_desc_label.text = char_info.get("desc", "")
+
+	var skill_icon_rect: TextureRect = get_node_or_null("CharPanel/VBox/CarouselHBox/ProfileCard/CardContent/InfoVBox/SkillCardHBox/SkillBtnFrame/SkillIconRect")
+	var skill_name_lbl: Label = get_node_or_null("CharPanel/VBox/CarouselHBox/ProfileCard/CardContent/InfoVBox/SkillCardHBox/SkillTextVBox/SkillNameLabel")
+	var skill_desc_lbl: Label = get_node_or_null("CharPanel/VBox/CarouselHBox/ProfileCard/CardContent/InfoVBox/SkillCardHBox/SkillTextVBox/SkillDescLabel")
+	
+	var s_icon_path: String = char_info.get("skill_icon", "")
+	if skill_icon_rect and s_icon_path != "":
+		var icon_tex: Texture2D = load(s_icon_path)
+		if icon_tex:
+			skill_icon_rect.texture = icon_tex
+
+	if skill_name_lbl:
+		skill_name_lbl.text = char_info.get("skill_name", "").to_upper()
+	if skill_desc_lbl:
+		skill_desc_lbl.text = char_info.get("skill_desc", "")
+
 	if char_status_label:
-		char_status_label.text = "★ STUDENT %d / 22 (READY TO RUN) ★" % (current_roster_idx + 1)
+		char_status_label.text = "STUDENT %d / 22 (READY TO RUN)" % (current_roster_idx + 1)
 	if start_run_btn:
-		start_run_btn.text = "START RUN AS %s" % char_info.get("name", "").to_upper()
+		start_run_btn.text = "SELECT & RUN"
 
 	# Update live running preview sprite on main menu
 	var sprite_path: String = char_info.get("sprite", "res://Assets/Player/runner_student_m_a.png")
@@ -181,10 +239,38 @@ func _on_close_char_pressed() -> void:
 
 func _on_howto_btn_pressed() -> void:
 	play_click()
+	current_slide_idx = 0
+	update_intro_slide()
 	howto_panel.visible = true
 	settings_panel.visible = false
 	if char_panel:
 		char_panel.visible = false
+
+func update_intro_slide() -> void:
+	if current_slide_idx < 0:
+		current_slide_idx = INTRO_SLIDES.size() - 1
+	elif current_slide_idx >= INTRO_SLIDES.size():
+		current_slide_idx = 0
+	
+	var data: Dictionary = INTRO_SLIDES[current_slide_idx]
+	if intro_title:
+		intro_title.text = data.get("title", "HOW TO PLAY")
+	if intro_subtitle:
+		intro_subtitle.text = data.get("subtitle", "")
+	if intro_instr:
+		intro_instr.text = data.get("text", "")
+	if intro_page_label:
+		intro_page_label.text = "SLIDE %d / %d" % [current_slide_idx + 1, INTRO_SLIDES.size()]
+
+func _on_prev_slide_pressed() -> void:
+	play_click()
+	current_slide_idx -= 1
+	update_intro_slide()
+
+func _on_next_slide_pressed() -> void:
+	play_click()
+	current_slide_idx += 1
+	update_intro_slide()
 
 func _on_settings_btn_pressed() -> void:
 	play_click()

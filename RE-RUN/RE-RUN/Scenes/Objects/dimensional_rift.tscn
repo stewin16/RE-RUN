@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://Scripts/Objects/dimensional_rift.gd" id="1_riftscript"]
+[ext_resource type="Texture2D" path="res://Assets/Items/AlternateRealm/celestial_ring.png" id="2_ringtex"]
+[ext_resource type="AudioStream" path="res://Assets/Audio/rift_escape.wav" id="3_riftsnd"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_rift"]
+radius = 28.0
+
+[node name="DimensionalRift" type="Area2D"]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_riftscript")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_ringtex")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_rift")
+
+[node name="EscapeSFX" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_riftsnd")
+volume_db = 2.0
+max_distance = 600.0

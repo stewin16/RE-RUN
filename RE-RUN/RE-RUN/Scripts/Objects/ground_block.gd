@@ -1,18 +1,11 @@
-extends AnimatableBody2D
-
-@export var move_offset: Vector2 = Vector2(120, 0)
-@export var duration: float = 3.0
+extends StaticBody2D
 
 @onready var sprite: Sprite2D = $Sprite2D
-
-var start_pos: Vector2
 
 static var biome_textures: Dictionary = {}
 
 func _ready() -> void:
 	apply_level_biome()
-	start_pos = global_position
-	start_tween()
 
 func apply_level_biome() -> void:
 	var lvl: int = 1
@@ -22,8 +15,7 @@ func apply_level_biome() -> void:
 	var tex = get_biome_texture(lvl)
 	if tex and sprite:
 		sprite.texture = tex
-		sprite.region_enabled = true
-		sprite.region_rect = Rect2(0, 0, 64, 16)
+		sprite.region_enabled = false
 
 static func get_biome_texture(lvl: int) -> Texture2D:
 	if biome_textures.has(lvl):
@@ -47,8 +39,3 @@ static func get_biome_texture(lvl: int) -> Texture2D:
 		biome_textures[lvl] = loaded_tex
 		return loaded_tex
 	return null
-
-func start_tween() -> void:
-	var tween := create_tween().set_loops().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	tween.tween_property(self, "global_position", start_pos + move_offset, duration)
-	tween.tween_property(self, "global_position", start_pos, duration)
