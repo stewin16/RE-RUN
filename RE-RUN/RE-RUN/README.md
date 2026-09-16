@@ -8,8 +8,7 @@
   <img src="screenshots/gameplay_level1.png" alt="Level 1 Campus Gameplay" width="49%" />
 </p>
 <p align="center">
-  <img src="screenshots/boss_exam.png" alt="Department Final Exam" width="49%" />
-  <img src="screenshots/alternate_realm.png" alt="Level 5 Secret Easter Egg - The Alternate Realm" width="49%" />
+  <img src="screenshots/boss_exam.png" alt="Department Final Exam" width="75%" />
 </p>
 
 ---
@@ -65,7 +64,7 @@ Each level represents an academic year and subject discipline. To defeat the pro
 ## 🎓 Department Final Exam
 
 <p align="center">
-  <img src="screenshots/boss_exam.png" alt="Department Final Exam Modal" width="80%" />
+  <img src="screenshots/boss_exam.png" alt="Department Final Exam Modal" width="75%" />
 </p>
 
 - At the end of every level runway, the professor challenges you to a 5-round examination.
@@ -77,13 +76,9 @@ Each level represents an academic year and subject discipline. To defeat the pro
 
 ## 🔮 The Secret Level 5 Easter Egg: "The Shadow District"
 
-<p align="center">
-  <img src="screenshots/alternate_realm.png" alt="Alternate Realm - The Shadow District" width="80%" />
-</p>
-
 > *"Wait... reality is tearing?!"* — The Janitor
 
-On **Level 5 (Prof. Patel's OS & Compiler Lab)**, a hidden dimensional rift anomaly is active:
+On **Level 5 (Prof. Patel's OS & Compiler Lab)**, a hidden dimensional anomaly is active:
 
 1. **How to Trigger**:
    - Play **Level 5**.
@@ -103,7 +98,7 @@ On **Level 5 (Prof. Patel's OS & Compiler Lab)**, a hidden dimensional rift anom
 ## 👥 Student Roster & Unique Perks
 
 <p align="center">
-  <img src="screenshots/main_menu.png" alt="Character Selection" width="80%" />
+  <img src="screenshots/main_menu.png" alt="Character Selection" width="75%" />
 </p>
 
 Choose your runner from the campus roster on the Main Menu:
