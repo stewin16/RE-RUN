@@ -3,6 +3,15 @@
 > **RUN. REACT. REPEAT.**  
 > *A high-octane pixel-art college endless-runner and computer science platformer built in Godot Engine 4.3.*
 
+<p align="center">
+  <img src="screenshots/main_menu.png" alt="RE-RUN Main Menu" width="49%" />
+  <img src="screenshots/gameplay_level1.png" alt="Level 1 Campus Gameplay" width="49%" />
+</p>
+<p align="center">
+  <img src="screenshots/boss_exam.png" alt="Department Final Exam" width="49%" />
+  <img src="screenshots/alternate_realm.png" alt="Level 5 Secret Easter Egg - The Alternate Realm" width="49%" />
+</p>
+
 ---
 
 ## 🎮 Overview
@@ -53,7 +62,24 @@ Each level represents an academic year and subject discipline. To defeat the pro
 
 ---
 
+## 🎓 Department Final Exam
+
+<p align="center">
+  <img src="screenshots/boss_exam.png" alt="Department Final Exam Modal" width="80%" />
+</p>
+
+- At the end of every level runway, the professor challenges you to a 5-round examination.
+- **Pass Requirement**: Score 3 out of 5 correct answers to defeat the professor, advance to the next level, and save your progress.
+- **Hints (50:50)**: Use earned hints to eliminate two incorrect choices.
+- **Fair Re-Exam System**: If you fail an exam or run out of hearts, you can spend **50 Wallet Coins** to revive. You are safely repositioned **$360\text{px}$ back on the runway** (over $500\text{px}$ away from the professor) with full hearts, and the exam engine **filters out previously asked questions to deliver completely new questions**!
+
+---
+
 ## 🔮 The Secret Level 5 Easter Egg: "The Shadow District"
+
+<p align="center">
+  <img src="screenshots/alternate_realm.png" alt="Alternate Realm - The Shadow District" width="80%" />
+</p>
 
 > *"Wait... reality is tearing?!"* — The Janitor
 
@@ -76,6 +102,10 @@ On **Level 5 (Prof. Patel's OS & Compiler Lab)**, a hidden dimensional rift anom
 
 ## 👥 Student Roster & Unique Perks
 
+<p align="center">
+  <img src="screenshots/main_menu.png" alt="Character Selection" width="80%" />
+</p>
+
 Choose your runner from the campus roster on the Main Menu:
 
 - ⚡ **Leo Tanaka** (*Algorithms*): **+10% Passive Sprint Speed** across all tracks.
@@ -87,17 +117,11 @@ Choose your runner from the campus roster on the Main Menu:
 
 ---
 
-## 💡 Technical Quiz & Re-Exam Mechanics
+## 💡 Technical Quiz & Pickups
 
-### Interactive Terminals & Pickups
 - **Knowledge Crystals (`+50 KNOW`)**: Boost academic knowledge used to purchase emergency hints.
 - **Memory Shards**: Contain actual test questions that appear during the level. Finding them guarantees those questions appear on the professor's exam!
 - **50:50 Lifeline Hint Button**: During any quiz or boss exam, spend a hint to strike out 2 wrong answers automatically.
-
-### Fair Revive & Re-Exam System
-- If you fail an exam or lose all lifelines during the boss battle, you can spend **50 Wallet Coins** to revive.
-- **Runway Spacing**: Reviving safely repositions you **$360\text{px}$ back on the pre-boss runway** (over $500\text{px}$ away from the professor), resets the boss's HP to 5, and restores all 3 hearts.
-- **Fresh Question Queue**: The exam engine filters out all previously asked questions, ensuring your re-take presents **completely different questions**!
 
 ---
 
@@ -105,7 +129,7 @@ Choose your runner from the campus roster on the Main Menu:
 
 ### Requirements
 - **Godot Engine 4.3** (Windows, Linux, or macOS)
-- A display supporting the **480 × 270** retro pixel-art canvas viewport (scaled cleanly via integer integer canvas scaling).
+- A display supporting the **480 × 270** retro pixel-art canvas viewport (scaled cleanly via integer canvas scaling).
 
 ### One-Click Launchers (Windows)
 The repository includes automated batch launchers:
@@ -126,6 +150,7 @@ The repository includes automated batch launchers:
 
 ```
 CollegeRun/
+├── screenshots/                    # Visual gameplay screenshots & exam previews
 ├── PLAY_GAME.bat                   # Master game launcher
 ├── SELECT_LEVEL.bat                # Interactive level selector
 ├── PLAY_LEVEL_1.bat - 10.bat       # Direct level launchers
