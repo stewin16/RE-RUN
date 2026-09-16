@@ -124,6 +124,8 @@ var boss_hp: int = 5
 var boss_round: int = 0
 var boss_correct_count: int = 0
 var boss_questions_queue: Array = []
+var was_boss_battle_active: bool = false
+var asked_boss_questions: Array[String] = []
 
 const QUIZ_QUESTIONS = [
 	{
@@ -175,6 +177,56 @@ const QUIZ_QUESTIONS = [
 		"q": "Which HTTP status code signifies that a requested resource was NOT FOUND?",
 		"correct": "404",
 		"wrongs": ["200", "500", "403"]
+	},
+	{
+		"q": "In Object-Oriented Programming, bundling data and methods inside a unit is called:",
+		"correct": "Encapsulation",
+		"wrongs": ["Polymorphism", "Inheritance", "Compilation"]
+	},
+	{
+		"q": "Which data structure uses a hash function to map keys to values with O(1) average lookup?",
+		"correct": "Hash Map / Hash Table",
+		"wrongs": ["Linked List", "Binary Heap", "Array"]
+	},
+	{
+		"q": "In computer architecture, which fast memory cache sits closest to the CPU core?",
+		"correct": "L1 Cache",
+		"wrongs": ["L3 Cache", "RAM", "Swap Space"]
+	},
+	{
+		"q": "Which network transport protocol guarantees reliable, ordered packet delivery with handshake?",
+		"correct": "TCP",
+		"wrongs": ["UDP", "ICMP", "IPX"]
+	},
+	{
+		"q": "In relational databases, what key uniquely identifies each record in a table?",
+		"correct": "Primary Key",
+		"wrongs": ["Foreign Key", "Composite Index", "Alternate Key"]
+	},
+	{
+		"q": "What is the worst-case time complexity of QuickSort when bad pivots are chosen?",
+		"correct": "O(n^2)",
+		"wrongs": ["O(n log n)", "O(n)", "O(log n)"]
+	},
+	{
+		"q": "Which process synchronization primitive prevents concurrent access to critical code?",
+		"correct": "Mutex / Lock",
+		"wrongs": ["Thread Pool", "DMA Buffer", "Pipeline Register"]
+	},
+	{
+		"q": "What design pattern ensures that a class has only one single global instance?",
+		"correct": "Singleton Pattern",
+		"wrongs": ["Factory Pattern", "Observer Pattern", "Adapter Pattern"]
+	},
+	{
+		"q": "Which tree traversal visits Root first, then Left subtree, then Right subtree?",
+		"correct": "Pre-Order Traversal",
+		"wrongs": ["In-Order Traversal", "Post-Order Traversal", "Level-Order Traversal"]
+	},
+	{
+		"q": "What cryptographic technique encrypts data using a public key and decrypts with a private key?",
+		"correct": "Asymmetric Encryption",
+		"wrongs": ["Symmetric Encryption", "Hashing", "Checksum Encoding"]
 	}
 ]
 
@@ -694,6 +746,7 @@ func process_standard_quiz_choice(selected_idx: int) -> void:
 # --- TEACHER FINAL BOSS BATTLE (PROF. STERLING) ---
 func start_boss_battle(boss_node: Node2D) -> void:
 	is_in_boss_battle = true
+	was_boss_battle_active = true
 	active_boss_node = boss_node
 	boss_hp = 5
 	boss_round = 0
@@ -703,30 +756,47 @@ func start_boss_battle(boss_node: Node2D) -> void:
 
 	var teacher_info: Dictionary = GameSettings.get_current_teacher()
 
-	# Populate boss question queue: prioritizing memory shards learned by player, then teacher's curriculum!
+	# Build candidate question pool (teacher curriculum, memory shards, general academic pool)
 	boss_questions_queue.clear()
+	var candidates: Array = []
+
+	var teacher_questions: Array = teacher_info.get("questions", []).duplicate()
+	teacher_questions.shuffle()
+	for q in teacher_questions:
+		candidates.append(q)
+
 	var memory_shards = GameSettings.learned_memory_shards.duplicate()
 	memory_shards.shuffle()
 	for shard in memory_shards:
-		boss_questions_queue.append({
+		candidates.append({
 			"q": shard["q"],
 			"correct": shard["correct"],
 			"wrongs": shard["wrongs"]
 		})
 
-	var teacher_questions: Array = teacher_info.get("questions", []).duplicate()
-	teacher_questions.shuffle()
-	for q in teacher_questions:
-		if boss_questions_queue.size() >= 5:
-			break
-		boss_questions_queue.append(q)
-
 	var general_pool = QUIZ_QUESTIONS.duplicate()
 	general_pool.shuffle()
 	for q in general_pool:
+		candidates.append(q)
+
+	# Pick 5 questions, prioritizing questions that have NOT been asked in recent boss exams
+	var unasked: Array = []
+	for q in candidates:
+		if not (q["q"] in asked_boss_questions):
+			unasked.append(q)
+
+	# If unasked pool has fewer than 5 questions, reset asked history and refill
+	if unasked.size() < 5:
+		asked_boss_questions.clear()
+		for q in candidates:
+			if not (q in unasked):
+				unasked.append(q)
+
+	for q in unasked:
 		if boss_questions_queue.size() >= 5:
 			break
 		boss_questions_queue.append(q)
+		asked_boss_questions.append(q["q"])
 
 	if boss_bar_panel:
 		boss_bar_panel.visible = true
@@ -829,6 +899,7 @@ func process_boss_battle_choice(selected_idx: int) -> void:
 		await get_tree().create_timer(1.2).timeout
 		if boss_bar_panel:
 			boss_bar_panel.visible = false
+		was_boss_battle_active = true
 		show_game_over_sequence("EXAM FAILED\nOUT OF LIFELINES")
 		return
 
@@ -843,6 +914,7 @@ func finish_boss_battle() -> void:
 
 	if boss_correct_count >= 3:
 		# WIN: Passed the final exam!
+		was_boss_battle_active = false
 		show_floating_text("--- FINAL EXAM PASSED! ---", Vector2(120, 80), Color(0.2, 0.95, 0.5))
 		if is_instance_valid(active_boss_node) and active_boss_node.has_method("play_state"):
 			active_boss_node.play_state("defeat")
@@ -850,6 +922,7 @@ func finish_boss_battle() -> void:
 		show_win_menu_sequence()
 	else:
 		# LOSE: Failed the final exam
+		was_boss_battle_active = true
 		show_floating_text("--- EXAM FAILED (SCORE: %d/5) ---" % boss_correct_count, Vector2(60, 80), Color(1.0, 0.3, 0.3))
 		await get_tree().create_timer(1.0).timeout
 		show_game_over_sequence("EXAM FAILED\n%s" % teacher_info.get("name", "PROFESSOR").to_upper())
@@ -1011,6 +1084,13 @@ func _on_revive_pressed() -> void:
 		GameSettings.lifelines = 3
 		update_hud_instant()
 		game_over_menu.visible = false
+		if boss_bar_panel:
+			boss_bar_panel.visible = false
+		if quiz_modal:
+			quiz_modal.visible = false
+		if boss_intro_modal:
+			boss_intro_modal.visible = false
+		is_in_boss_battle = false
 		get_tree().paused = false
 		emit_signal("revive_requested")
 		show_floating_text("REVIVED! +3 LIVES!", Vector2(120, 100), Color(0.2, 0.95, 0.4))

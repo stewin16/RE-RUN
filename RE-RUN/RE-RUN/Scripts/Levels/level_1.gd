@@ -1178,10 +1178,66 @@ func _on_revive_requested() -> void:
 	if is_instance_valid(active_janitor):
 		active_janitor.queue_free()
 		active_janitor = null
-	if player:
-		player.revive_at_location(player.global_position)
+
+	# Check if reviving from a failed Boss Final Exam:
+	var revived_from_boss: bool = false
+	if hud and "was_boss_battle_active" in hud and hud.was_boss_battle_active:
+		revived_from_boss = true
+	elif is_boss_active or (boss_spawned and is_instance_valid(boss_instance) and player and player.global_position.x >= boss_trigger_x - 120.0):
+		revived_from_boss = true
+
+	if revived_from_boss and is_instance_valid(boss_instance):
+		# Reset boss encounter trigger and UI
+		is_boss_active = false
+		if hud:
+			hud.was_boss_battle_active = false
+			hud.is_in_boss_battle = false
+			if hud.boss_bar_panel:
+				hud.boss_bar_panel.visible = false
+			if hud.quiz_modal:
+				hud.quiz_modal.visible = false
+			if hud.boss_intro_modal:
+				hud.boss_intro_modal.visible = false
+
+		# Reset boss health and idle animation
+		boss_instance.hp = boss_instance.max_hp
+		boss_instance.is_active = false
+		if boss_instance.has_method("play_state"):
+			boss_instance.play_state("idle")
+
+		# Revive player at a distance away from the boss (on the safe runway 360px back)
+		var revive_x: float = boss_trigger_x - 360.0
+		if player:
+			player.global_position = Vector2(revive_x, 190.0)
+			player.velocity = Vector2(player.WALK_SPEED, 0.0)
+			GameSettings.lifelines = 3
+			player.health = 3
+			player.is_dead = false
+			player.is_controlled = true
+			player.is_sliding = false
+			player.is_attacking = false
+			player.hurt_timer = 0.0
+			player.invulnerable_timer = 1.8
+			if player.sprite:
+				player.sprite.rotation = 0.0
+				player.sprite.scale = Vector2.ONE
+				player.sprite.play("run")
+			player.emit_signal("health_changed", player.health)
+
 		if hud and hud.has_method("update_health"):
-			hud.update_health(player.health, player.max_health)
+			hud.update_health(3, 3)
+		if hud and hud.has_method("show_toast"):
+			hud.show_toast("RE-EXAM GRANTED! RETRYING WITH NEW QUESTIONS!")
+
+		if camera:
+			camera.position = Vector2(0, -20)
+			camera.reset_smoothing()
+	else:
+		if player:
+			player.revive_at_location(player.global_position)
+			if hud and hud.has_method("update_health"):
+				hud.update_health(player.health, player.max_health)
+
 	if bgm and not bgm.playing:
 		bgm.play()
 
