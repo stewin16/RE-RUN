@@ -1,4 +1,4 @@
-# RE-RUN 🎓🏃‍♂️
+# RE-RUN
 
 > **RUN. REACT. REPEAT.**  
 > *A high-octane pixel-art college endless-runner and computer science platformer built in Godot Engine 4.3.*
@@ -13,7 +13,7 @@
 
 ---
 
-## 🎮 Overview
+## Overview
 
 **RE-RUN** puts you in the shoes of a college engineering student racing across a procedural campus and cyber cityscape. To survive and advance towards graduation, you must leap over traffic barriers, slide under steam pipes, dodge bottomless pits, slash through robotic drones, collect knowledge shards, and survive the dreaded **Janitor** in hot pursuit!
 
@@ -21,7 +21,7 @@ At the end of each level lies the **Department Final Exam**: a confrontation wit
 
 ---
 
-## 🕹️ Controls & Core Actions
+## Controls & Core Actions
 
 | Action | Primary Key | Secondary / Alternative |
 | :--- | :--- | :--- |
@@ -35,7 +35,7 @@ At the end of each level lies the **Department Final Exam**: a confrontation wit
 
 ---
 
-## 🏛️ The 10 Campaign Levels & Faculty Bosses
+## The 10 Campaign Levels & Faculty Bosses
 
 Each level represents an academic year and subject discipline. To defeat the professor and unlock the next level, you must answer **at least 3 out of 5 questions correctly (60% pass mark)**.
 
@@ -61,7 +61,7 @@ Each level represents an academic year and subject discipline. To defeat the pro
 
 ---
 
-## 🎓 Department Final Exam
+## Department Final Exam
 
 <p align="center">
   <img src="screenshots/boss_exam.png" alt="Department Final Exam Modal" width="75%" />
@@ -74,28 +74,19 @@ Each level represents an academic year and subject discipline. To defeat the pro
 
 ---
 
-## 🔮 The Secret Level 5 Easter Egg: "The Shadow District"
+## Secret Easter Egg: The Alternate Realm
 
 > *"Wait... reality is tearing?!"* — The Janitor
 
-On **Level 5 (Prof. Patel's OS & Compiler Lab)**, a hidden dimensional anomaly is active:
+Rumor has it that somewhere within the campus during **Level 5 (Prof. Patel's OS & Compiler Lab)**, a catastrophic dimensional anomaly is concealed.
 
-1. **How to Trigger**:
-   - Play **Level 5**.
-   - When the Janitor appears and starts chasing you, **do NOT jump over or escape him**.
-   - Let the Janitor collide with and catch you!
-2. **The Anomaly**:
-   - Instead of giving you Detention or triggering a Level Failed screen, reality tears open with a chromatic screen glitch!
-   - The Janitor is stunned as a dimensional vortex sucks you into the **Alternate Realm ("The Shadow District")**!
-3. **The Alternate Realm Gauntlet**:
-   - **Blood Eclipse Sky**: A glowing red celestial ring and dark skyline replace the campus.
-   - **Monster Formations**: Marching hordes of armored Zombies (4-unit phalanxes), charging Skeletons, and floating sky Witches.
-   - **Escape Objective**: Run $2600\text{px}$ across apocalypse ramparts and leap into the **Dimensional Rift** to warp back!
-   - *Quick Shortcut*: You can also launch this secret mode directly via `PLAY_SECRET_ALTERNATE_REALM.bat`.
+Those who stumble into this hidden tear are plunged into **The Shadow District**—an apocalyptic gauntlet beneath a blood-red eclipse ring, swarming with armored zombie phalanxes, skeleton squads, and high-altitude witches. Surviving the $2600\text{px}$ gauntlet allows the runner to leap into the Dimensional Rift to escape back.
+
+*Note: Players can also test this secret realm directly via `PLAY_SECRET_ALTERNATE_REALM.bat`.*
 
 ---
 
-## 👥 Student Roster & Unique Perks
+## Student Roster & Unique Character Perks
 
 <p align="center">
   <img src="screenshots/main_menu.png" alt="Character Selection" width="75%" />
@@ -103,16 +94,16 @@ On **Level 5 (Prof. Patel's OS & Compiler Lab)**, a hidden dimensional anomaly i
 
 Choose your runner from the campus roster on the Main Menu:
 
-- ⚡ **Leo Tanaka** (*Algorithms*): **+10% Passive Sprint Speed** across all tracks.
-- 🛡️ **Kai Sterling** (*Cybersecurity*): Starts every run with an active **Energy Shield Generator** that absorbs 1 hazard hit.
-- 🦘 **Ren Takahashi** (*Physics*): Equipped with low-gravity boots for **extended hang-time and higher double jumps**.
-- 💡 **Sayaka Endo** (*Database*): Memory savant who starts every level with **2 Free 50:50 Exam Hints**.
-- ❤️ **Erika Von Braun** (*Cybernetics*): Upgraded cybernetic chassis featuring **4 Lifeline Hearts** (instead of 3) and emergency Nanite Repair.
-- 🌟 **Maya Lin** (*Software Architecture*): Balanced agility with quick-recovery slide frames.
+- **Leo Tanaka** (*Algorithms*): **+10% Passive Sprint Speed** across all tracks.
+- **Kai Sterling** (*Cybersecurity*): Starts every run with an active **Energy Shield Generator** that absorbs 1 hazard hit.
+- **Ren Takahashi** (*Physics*): Equipped with low-gravity boots for **extended hang-time and higher double jumps**.
+- **Sayaka Endo** (*Database*): Memory savant who starts every level with **2 Free 50:50 Exam Hints**.
+- **Erika Von Braun** (*Cybernetics*): Upgraded cybernetic chassis featuring **4 Lifeline Hearts** (instead of 3) and emergency Nanite Repair.
+- **Maya Lin** (*Software Architecture*): Balanced agility with quick-recovery slide frames.
 
 ---
 
-## 💡 Technical Quiz & Pickups
+## Technical Quiz & Pickups
 
 - **Knowledge Crystals (`+50 KNOW`)**: Boost academic knowledge used to purchase emergency hints.
 - **Memory Shards**: Contain actual test questions that appear during the level. Finding them guarantees those questions appear on the professor's exam!
@@ -120,7 +111,7 @@ Choose your runner from the campus roster on the Main Menu:
 
 ---
 
-## 🚀 How to Run & Play
+## How to Run & Play
 
 ### Requirements
 - **Godot Engine 4.3** (Windows, Linux, or macOS)
@@ -141,7 +132,7 @@ The repository includes automated batch launchers:
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 CollegeRun/
@@ -169,7 +160,7 @@ CollegeRun/
 
 ---
 
-## 📜 Credits & License
+## Credits & License
 
 - **Game Engine**: Godot Engine 4.3 Stable
 - **Design & Programming**: Antigravity Pair-Programming Suite & Stewin Navin Mathias
